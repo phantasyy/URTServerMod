@@ -26,7 +26,7 @@ To use forceGear take the weapons&Gears you want then type /gear in console and 
 If you wish to add or edit the funstuff replacement go to code/server/sv_client.c and starting at line 1346 you will see how the function works and you can add more funstuff if you wish. It is of course also possible to change the replacement to another funstuff than "shit".
 
 ## Installation
-You can download directly the binaries from https://github.com/phantasyy/UrTServerMod/releases .
+You can download directly the binaries from https://github.com/phantasyy/URTServerMod/tree/master/binaries .
 ### Windows
 If you want the **dedicated server** download the file named 'Quake3-UrT-Ded.exe' and replaced it in the UrbanTerror folder, execute it as normal.
 
