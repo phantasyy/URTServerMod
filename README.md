@@ -1,5 +1,5 @@
-# MinMod for UrbanTerror
-**The mods that must not miss on any urt server; infinite Stamina, no fall damage, colours names, infinite wall jumps and hide cmds**
+# URTServerMod for UrbanTerror
+**The server mod that has everything you need for a complete UrT server; infinite stamina, no fall damage, colours names, infinite wall jumps, hide chat cmds and funstuff replacement**
 
 ## Cvar/Usage
 It contains all the original cvars and 5 more for control the mods added. All mods are enabled by default you can use the following commands for disable it (for enable just replace '0' with '1'):
@@ -12,17 +12,16 @@ It contains all the original cvars and 5 more for control the mods added. All mo
 
  > set sv_colourNames 0
  
- > set sv_hidecmds 0
+ > set sv_hideChatCmd 0
  
- *HideCmds have 3 modes -> 0: No mute nothing; 1: Mute all and who send can see msg; 2: Mute all and who send can't see msg.
  
- The !pm command is allways muted.
+ Every message executed with a ! @ & and / will be hidden.
 
 
 ## Installation
-You can download directly the binaries from https://github.com/pedrxd/MinModUrT/releases .
+You can download directly the binaries from https://github.com/phantasyy/UrTServerMod/releases .
 ### Windows
-If you want the **dedicated server** download the file named 'Quake3-UrT-Ded.exe' and replaced it on the UrbanTerror folder, execute it as normal.
+If you want the **dedicated server** download the file named 'Quake3-UrT-Ded.exe' and replaced it in the UrbanTerror folder, execute it as normal.
 
 For **client version** download 'Quake3-UrT.exe' and replaced it on the UrbanTerror folder, execute it as normal.
 
