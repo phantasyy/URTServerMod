@@ -2,7 +2,7 @@
 **The server mod that has everything you need for a complete UrT server; infinite stamina, no fall damage, colours names, infinite wall jumps, hide chat cmds and funstuff replacement**
 
 ## Cvar/Usage
-It contains all the original cvars and 5 more for control the mods added. All mods are enabled by default you can use the following commands for disable it (for enable just replace '0' with '1'):
+It contains all the original cvars and 5 more for control the mods added. All mods are enabled by default you can use the following commands for disable it (to enable just replace '0' with '1'):
 
  > set sv_infiniteStamina 0
 
@@ -14,8 +14,14 @@ It contains all the original cvars and 5 more for control the mods added. All mo
  
  > set sv_hideChatCmd 0
  
+ > set sv_noKnife 0
  
- Every message executed with a ! @ & and / will be hidden.
+ >set sv_forceGear ""
+ 
+ 
+Every message executed with a ! @ & and / will be hidden.
+
+To use forceGear take the weapons&Gears you want then type /gear in console and put that gear code into the sv_forceGear command.
 
 
 ## Installation
