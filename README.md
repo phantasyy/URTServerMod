@@ -23,6 +23,7 @@ Every message executed with a ! @ & and / will be hidden.
 
 To use forceGear take the weapons&Gears you want then type /gear in console and put that gear code into the sv_forceGear command.
 
+If you wish to add or edit the funstuff replacement go to code/server/sv_client.c and starting at line 1346 you will see how the function works and you can add more funstuff if you wish. It is of course also possible to change the replacement to another funstuff than "shit".
 
 ## Installation
 You can download directly the binaries from https://github.com/phantasyy/UrTServerMod/releases .
