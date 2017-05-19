@@ -1410,6 +1410,58 @@ void SV_UpdateUserinfo_f( client_t *cl ) {
             Q_strncpyz(gl->pers.netname, cl->colourName, MAX_NETNAME);
 }
 
+/*
+==================
+SV_Maplist_f
+==================
+*/
+void SV_Maplist_f(client_t *cl) {
+    int numMaps, j;
+    char **maplist;
+
+    maplist = FS_ListFiles("maps", ".bsp", &numMaps);
+    SV_SendServerCommand(cl, "print \"^3Maps:\"");
+    for (j = 0; j < numMaps; j++) {
+        maplist[j][strlen(maplist[j])-4] = 0;
+        SV_SendServerCommand(cl, "print \"^2%s\"", maplist[j]);
+    }
+}
+
+/*
+==================
+SV_Mapcycle_f
+==================
+*/
+void SV_Mapcycle_f(client_t *cl) {
+    int s;
+    fileHandle_t h;
+    char *cycleFile;
+    char *allMaps, *singleMap;
+
+    cycleFile = Cvar_VariableString("g_mapcycle");
+
+    s = FS_FOpenFileRead(cycleFile, &h, qtrue);
+    if (s) {
+        allMaps = Z_Malloc(s + 1);
+        if (FS_Read(allMaps, s, h)) {
+            SV_SendServerCommand(cl, "print \"Mapcycle:\"");
+            singleMap = strtok(allMaps, "\r\n");
+            while (singleMap) {
+                if (!Q_stricmp(sv_mapname->string, singleMap)) {
+                    SV_SendServerCommand(cl, "print \"^2%s <- We are here\"", singleMap);
+                } else {
+                    SV_SendServerCommand(cl, "print \"%s\"", singleMap);
+                }
+                singleMap = strtok(NULL, "\r\n");
+            }
+        }
+    } else {
+        SV_SendServerCommand(cl, "print \"Mapcycle retrieval failed.\"");
+    }
+}
+
+
+
 typedef struct {
 	char	*name;
 	void	(*func)( client_t *cl );
@@ -1424,6 +1476,9 @@ static ucmd_t ucmds[] = {
 	{"nextdl", SV_NextDownload_f},
 	{"stopdl", SV_StopDownload_f},
 	{"donedl", SV_DoneDownload_f},
+
+    {"maplist", SV_Maplist_f},
+    {"mapcycle", SV_Mapcycle_f},
 
 	{NULL, NULL}
 };
