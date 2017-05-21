@@ -953,6 +953,38 @@ void SV_Init (void) {
 	sv_hideChatCmd = Cvar_Get("sv_hideChatCmd", "1", CVAR_ARCHIVE);
 	sv_forceGear = Cvar_Get("sv_forceGear", "", CVAR_ARCHIVE);
 
+
+	sv_disableDefaultMaps = Cvar_Get("sv_disableDefaultMaps", "0", CVAR_ARCHIVE);
+	sv_specChatGlobal = Cvar_Get ("sv_specChatGlobal", "1", CVAR_ARCHIVE );
+	sv_block1337 = Cvar_Get ("sv_block1337", "1", CVAR_ARCHIVE );
+
+    // String Replace
+    sv_CensoredStrings = Cvar_Get("sv_CensoredStrings", "0", CVAR_ARCHIVE);
+    sv_CustomStrings = Cvar_Get("sv_CustomStrings", "0", CVAR_ARCHIVE);
+	str_enteredthegame = Cvar_Get("str_enteredthegame", "^7 entered the game", CVAR_ARCHIVE);
+	str_joinedtheredteam = Cvar_Get("str_joinedtheredteam", "^7 joined the red team.", CVAR_ARCHIVE);
+	str_joinedtheblueteam = Cvar_Get("str_joinedtheblueteam", "^7 joined the blue team.", CVAR_ARCHIVE);
+	str_joinedthespectators = Cvar_Get("str_joinedthespectators", "^7 joined the spectators.", CVAR_ARCHIVE);
+	str_joinedthebattle = Cvar_Get("str_joinedthebattle", "^7 joined the battle.", CVAR_ARCHIVE);
+	str_capturedblueflag = Cvar_Get("str_capturedblueflag", "^7 captured the ^4Blue flag!", CVAR_ARCHIVE);
+	str_capturedredflag = Cvar_Get("str_capturedredflag", "^7 captured the ^1Red flag!", CVAR_ARCHIVE);
+	str_hastakentheblueflag = Cvar_Get("str_hastakentheblueflag", "^7 has taken the ^4Blue^7 flag!", CVAR_ARCHIVE);
+	str_hastakentheredflag = Cvar_Get("str_hastakentheredflag", "^7 has taken the ^1Red^7 flag!", CVAR_ARCHIVE);
+	str_droppedtheredflag = Cvar_Get("str_droppedtheredflag", "^7 dropped the ^1Red^7 flag!", CVAR_ARCHIVE);
+	str_droppedtheblueflag = Cvar_Get("str_droppedtheblueflag", "^7 dropped the ^4Blue^7 flag!", CVAR_ARCHIVE);
+	str_returnedtheredflag = Cvar_Get("str_returnedtheredflag", "^7 returned the RED flag!", CVAR_ARCHIVE);
+	str_returnedtheblueflag = Cvar_Get("str_returnedtheblueflag", "^7 returned the BLUE flag!", CVAR_ARCHIVE);
+	str_theredflaghasreturned2 = Cvar_Get("str_theredflaghasreturned2", "^7The RED flag has returned", CVAR_ARCHIVE);
+	str_theredflaghasreturned = Cvar_Get("str_theredflaghasreturned", "The ^1Red ^7flag has returned", CVAR_ARCHIVE);
+	str_theblueflaghasreturned2 = Cvar_Get("str_theblueflaghasreturned2", "^7The BLUE flag has returned", CVAR_ARCHIVE);
+	str_theblueflaghasreturned = Cvar_Get("str_theblueflaghasreturned", "The ^4Blue ^7flag has returned", CVAR_ARCHIVE);
+	str_wasslappedbytheadmin = Cvar_Get("str_wasslappedbytheadmin", " ^7was ^3SLAPPED!^7 by the Admin", CVAR_ARCHIVE);
+	str_youvebeenslapped = Cvar_Get("str_youvebeenslapped", " ^7you've been ^3SLAPPED!", CVAR_ARCHIVE);
+	str_blueteamwins = Cvar_Get("str_blueteamwins", "^4Blue^7 team wins", CVAR_ARCHIVE);
+	str_redteamwins = Cvar_Get("str_redteamwins", "^1Red^7 team wins", CVAR_ARCHIVE);
+    
+    sv_mutewords = Cvar_Get("sv_mutewords", "", CVAR_ARCHIVE);
+
 	#ifdef USE_AUTH
 	sv_authServerIP = Cvar_Get("sv_authServerIP", "", CVAR_TEMP | CVAR_ROM);
 	sv_auth_engine = Cvar_Get("sv_auth_engine", "1", CVAR_ROM);

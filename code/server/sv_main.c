@@ -73,6 +73,39 @@ cvar_t  *sv_noKnife;
 cvar_t  *sv_hideChatCmd;
 cvar_t	*sv_forceGear;
 
+cvar_t	*sv_disableDefaultMaps;
+cvar_t	*sv_specChatGlobal;		// whether to broadcast spec chat globally
+cvar_t	*sv_block1337;			// whether to block clients with qport 1337,
+
+
+// String Replace
+cvar_t	*sv_CensoredStrings;
+cvar_t	*sv_CustomStrings;
+cvar_t	*str_enteredthegame;
+cvar_t	*str_joinedtheredteam;
+cvar_t	*str_joinedtheblueteam;
+cvar_t	*str_joinedthespectators;
+cvar_t	*str_joinedthebattle;
+cvar_t	*str_capturedblueflag;
+cvar_t	*str_capturedredflag;
+cvar_t	*str_hastakentheblueflag;
+cvar_t	*str_hastakentheredflag;
+cvar_t	*str_droppedtheredflag;
+cvar_t	*str_droppedtheblueflag;
+cvar_t	*str_returnedtheredflag;
+cvar_t	*str_returnedtheblueflag;
+cvar_t	*str_theredflaghasreturned2;
+cvar_t	*str_theredflaghasreturned;
+cvar_t	*str_theblueflaghasreturned2;
+cvar_t	*str_theblueflaghasreturned;
+cvar_t	*str_wasslappedbytheadmin;
+cvar_t	*str_youvebeenslapped;
+cvar_t	*str_blueteamwins;
+cvar_t	*str_redteamwins;
+
+cvar_t	*sv_mutewords;
+
+
 //@Barbatos
 #ifdef USE_AUTH
 cvar_t	*sv_authServerIP;
@@ -237,6 +270,228 @@ void SV_AddServerCommand( client_t *client, const char *cmd ) {
 }
 
 
+int str_CheckString(char sub[], char s[]) {
+	int i, j;
+	for (i=0; s[i]; i++) {
+		for (j=0; sub[j] && tolower(sub[j]) == tolower(s[i+j]); j++);
+		if (!sub[j]) {
+			return i;
+		}
+	}
+	return -1;
+}
+
+void str_ChangeTo(char s[], int *tams, int from, int qtde, char sub[], int tamsub) {
+	int i;
+	if (tamsub > qtde) {
+		for (i=*tams+tamsub-qtde; i > from; i--)
+			s[i] = s[i-tamsub+qtde];
+	}
+	else if (tamsub < qtde) {
+		for (i=from+tamsub; i < *tams-(qtde-tamsub); i++)
+			s[i] = s[i+qtde-tamsub];
+	}
+	*tams += tamsub - qtde;
+	for (i=from; i-from < tamsub; i++)
+		s[i] = sub[i-from];
+}
+
+void str_ChangeServerStrings( char *s ) {
+    // maybe find a better solution to declare these cvars? i dont care it works atm
+	int i, len = strlen(s);
+	
+	//^7 joined the battle.\n
+	
+	if ( (i = str_CheckString("^7 joined the battle.",s)) != -1) {
+		str_ChangeTo( s, &len, i, 21, str_joinedthebattle->string, strlen(str_joinedthebattle->string) );
+	}
+	
+	if ( (i = str_CheckString("^7 joined the red team.",s)) != -1) {
+		str_ChangeTo( s, &len, i, 24, str_joinedtheredteam->string, strlen(str_joinedtheredteam->string) );
+	}
+	
+	if ( (i = str_CheckString("^7 joined the blue team.",s)) != -1) {
+		str_ChangeTo( s, &len, i, 25, str_joinedtheblueteam->string, strlen(str_joinedtheblueteam->string) );
+	}
+	// join a team
+	
+	if ( (i = str_CheckString("^7 entered the game",s)) != -1) {
+		str_ChangeTo( s, &len, i, 19, str_enteredthegame->string, strlen(str_enteredthegame->string) );
+	}
+	//entered the game
+	
+	if ( (i = str_CheckString("^7 joined the spectators.",s)) != -1) {
+		str_ChangeTo( s, &len, i, 25, str_joinedthespectators->string, strlen(str_joinedthespectators->string) );
+	}
+	//joined the spectators.
+	
+	if ( (i = str_CheckString("^7 captured the ^1Red flag!",s)) != -1) {
+		str_ChangeTo( s, &len, i, 27, str_capturedredflag->string, strlen(str_capturedredflag->string) );
+	}
+	if ( (i = str_CheckString("^7 captured the ^4Blue flag!",s)) != -1) {
+		str_ChangeTo( s, &len, i, 28, str_capturedblueflag->string, strlen(str_capturedblueflag->string) );
+	}
+	//^7 captured the %s flag!
+	
+	if ( (i = str_CheckString("^7 has taken the ^1Red^7 flag!",s)) != -1) {
+		str_ChangeTo( s, &len, i, 30, str_hastakentheredflag->string, strlen(str_hastakentheredflag->string) );
+	}
+	if ( (i = str_CheckString("^7 has taken the ^4Blue^7 flag!",s)) != -1) {
+		str_ChangeTo( s, &len, i, 31, str_hastakentheblueflag->string, strlen(str_hastakentheblueflag->string) );
+	}
+	// ^7 has taken the %s^7 flag!
+	
+	if ( (i = str_CheckString("^7 dropped the ^1Red^7 flag!",s)) != -1) {
+		str_ChangeTo( s, &len, i, 28, str_droppedtheredflag->string, strlen(str_droppedtheredflag->string) );
+	}
+	if ( (i = str_CheckString("^7 dropped the ^4Blue^7 flag!",s)) != -1) {
+		str_ChangeTo( s, &len, i, 29, str_droppedtheblueflag->string, strlen(str_droppedtheblueflag->string) );
+	}
+	//^7 dropped the ^4Blue^7 flag!
+	
+	if ( (i = str_CheckString("^7 returned the RED flag!",s)) != -1) {
+		str_ChangeTo( s, &len, i, 25, str_returnedtheredflag->string, strlen(str_returnedtheredflag->string) );
+	}
+	if ( (i = str_CheckString("^7 returned the BLUE flag!",s)) != -1) {
+		str_ChangeTo( s, &len, i, 26, str_returnedtheblueflag->string, strlen(str_returnedtheblueflag->string) );
+	}
+	// ^7 returned the BLUE flag!
+	
+	if ( (i = str_CheckString(" has the ^1BOMB",s)) != -1) {
+		str_ChangeTo( s, &len, i, 15, "^7 has the ^1BOMB", strlen("^7 has the ^1BOMB") );
+	}
+	// Fix color breaking
+	
+	if ( (i = str_CheckString("^4Blue^7 team wins",s)) != -1) {
+		str_ChangeTo( s, &len, i, 18, str_blueteamwins->string, strlen(str_blueteamwins->string) );
+	}
+	//^4Blue^7 team wins
+	if ( (i = str_CheckString("^1Red^7 team wins",s)) != -1) {
+		str_ChangeTo( s, &len, i, 17, str_redteamwins->string, strlen(str_redteamwins->string) );
+	}
+	//^Red^7 team wins
+	
+	if ( (i = str_CheckString("The ^1Red ^7flag has returned",s)) != -1) {
+		str_ChangeTo( s, &len, i, 29, str_theredflaghasreturned->string, strlen(str_theredflaghasreturned->string) );
+	}
+	if ( (i = str_CheckString("The ^4Blue ^7flag has returned",s)) != -1) {
+		str_ChangeTo( s, &len, i, 30, str_theblueflaghasreturned->string, strlen(str_theblueflaghasreturned->string) );
+	}
+	// THE CP : "The %s ^7flag has returned!
+	
+	if ( (i = str_CheckString("^7The RED flag has returned",s)) != -1) {
+		str_ChangeTo( s, &len, i, 27, str_theredflaghasreturned2->string, strlen(str_theredflaghasreturned2->string) );
+	}
+	if ( (i = str_CheckString("^7The BLUE flag has returned",s)) != -1) {
+		str_ChangeTo( s, &len, i, 29, str_theblueflaghasreturned2->string, strlen(str_theblueflaghasreturned2->string) );
+	}
+	// THE PRINT "^7The  flag has returned!
+	
+	if ( (i = str_CheckString(" called a vote.",s)) != -1) {
+		str_ChangeTo( s, &len, i, 15, "^7 called a vote.", strlen("^7 called a vote.") );
+	}
+	// Fix callvote-print color bug
+	
+	if ( (i = str_CheckString(" ^7was ^3SLAPPED!^7 by the Admin",s)) != -1) {
+		str_ChangeTo( s, &len, i, 32, str_wasslappedbytheadmin->string, strlen(str_wasslappedbytheadmin->string) );
+	}
+	if ( (i = str_CheckString(" ^7you've been ^3SLAPPED!",s)) != -1) {
+		str_ChangeTo( s, &len, i, 25, str_youvebeenslapped->string, strlen(str_youvebeenslapped->string) );
+	}
+    
+}
+
+void str_CensorThisString( char *s ) {
+	int i, len = strlen(s);
+	
+	
+	
+	if (
+		(i = str_CheckString("fdp",s)) != -1 ||
+		(i = str_CheckString("ntm",s)) != -1 ||
+		(i = str_CheckString("fag",s)) != -1
+		)
+	{
+		str_ChangeTo( s, &len, i, 3, "^1***^3", strlen("^0***^3") );
+	}
+	
+	if (
+		(i = str_CheckString("cunt",s)) != -1 ||
+		(i = str_CheckString("hora",s)) != -1 ||
+		(i = str_CheckString("puto",s)) != -1 ||
+		(i = str_CheckString("puta",s)) != -1
+		)
+	{
+		str_ChangeTo( s, &len, i, 4, "^1****^3", strlen("^0****^3") );
+	}
+	
+	if (
+		(i = str_CheckString("bitch",s)) != -1 ||
+		(i = str_CheckString("kurwa",s)) != -1 ||
+		(i = str_CheckString("merde",s)) != -1 ||
+		(i = str_CheckString("fitta",s)) != -1 ||
+		(i = str_CheckString("pizda",s)) != -1
+		)
+	{
+		str_ChangeTo( s, &len, i, 5, "^1*****^3", strlen("*****") );
+	}
+	
+	
+	if (
+		(i = str_CheckString("nigger",s)) != -1 ||
+		(i = str_CheckString("putain",s)) != -1 ||
+		(i = str_CheckString("biatch",s)) != -1 ||
+		(i = str_CheckString("salope",s)) != -1 ||
+		(i = str_CheckString("encule",s)) != -1 ||
+		(i = str_CheckString("pinche",s)) != -1 ||
+		(i = str_CheckString("batard",s)) != -1
+
+		)
+	{
+		str_ChangeTo( s, &len, i, 6, "^1******^3", strlen("^1******^3") );
+	}	
+	
+	if (	
+		(i = str_CheckString("asshole",s)) != -1 ||
+		(i = str_CheckString("maricon",s)) != -1 ||
+		(i = str_CheckString("caralho",s)) != -1
+		
+		)
+	{
+		str_ChangeTo( s, &len, i, 7, "^1*******^3", strlen("^1*******^3") );
+	}
+	
+	
+}
+
+//  mutebadword functions
+int mbw_CheckBadWord(char sub[], char s[]) {
+	int i, j;
+	for (i=0; s[i]; i++) {
+		for (j=0; sub[j] && tolower(sub[j]) == tolower(s[i+j]); j++);
+		if (!sub[j]) {
+			return i;
+		}
+	}
+	return 0;
+}
+int mbw_BadWordMute(char* msg) {
+    int i;
+    char string[1024];
+    strcpy(string,sv_mutewords->string);
+    char * cut;
+	cut = strtok (string,",");
+    while (cut != NULL)
+    {
+        if (i = mbw_CheckBadWord(cut,msg) != -1) {
+            return 1;
+        }
+        cut = strtok (NULL, ",");
+    }
+    return 0;
+}
+
+
 /*
 =================
 SV_SendServerCommand
@@ -251,17 +506,74 @@ void QDECL SV_SendServerCommand(client_t *cl, const char *fmt, ...) {
 	byte		message[MAX_MSGLEN];
 	client_t	*client;
 	int			j;
-	
+	int 		msglen;
 	va_start (argptr,fmt);
 	Q_vsnprintf ((char *)message, sizeof(message), fmt,argptr);
 	va_end (argptr);
+
+	msglen = strlen((char *)message);
 
 	// Fix to http://aluigi.altervista.org/adv/q3msgboom-adv.txt
 	// The actual cause of the bug is probably further downstream
 	// and should maybe be addressed later, but this certainly
 	// fixes the problem for now
-	if ( strlen ((char *)message) > 1022 ) {
+	if ( msglen > 1022 ) {
 		return;
+	}
+
+	if ( cl != NULL ) {
+		SV_AddServerCommand( cl, (char *)message );
+		return;
+
+	}
+	
+	// hack to echo broadcast prints to console
+	if ( com_dedicated->integer && !strncmp( (char *)message, "print", 5) ) {
+		Com_Printf ("broadcast: %s\n", SV_ExpandNewlines((char *)message) );
+	}
+
+	// send the data to all relevent clients
+	for (j = 0, client = svs.clients; j < sv_maxclients->integer ; j++, client++) {
+		SV_AddServerCommand( client, (char *)message );
+	}
+
+	if (sv.incognitoJoinSpec &&
+			cl == NULL &&
+			(!Q_strncmp((char *) message, "print \"", 7)) &&
+			msglen >= 27 + 7 &&
+			!strcmp("^7 joined the spectators.\n\"", ((char *) message) + msglen - 27)) {
+		return;
+	}
+
+	/////////////////////////////////////////////////////////
+	// separator for incognito.patch and specchatglobal.patch
+	/////////////////////////////////////////////////////////
+
+	if (sv_specChatGlobal->integer > 0 && cl != NULL &&
+			!Q_strncmp((char *) message, "chat \"^7(SPEC) ", 15)) {
+		if (!Q_strncmp((char *) message, sv.lastSpecChat, sizeof(sv.lastSpecChat) - 1)) {
+			return;
+		}
+		Q_strncpyz(sv.lastSpecChat, (char *) message, sizeof(sv.lastSpecChat));
+		cl = NULL;
+	}
+
+    /*
+    =================
+    Use the modified strings
+    =================
+    */
+	if (sv_CustomStrings->integer > 0) {
+		str_ChangeServerStrings( (char*)message );
+	}
+	
+	if (sv_CensoredStrings->integer > 0) {
+		// for to censor a sentence for some times more
+		int count;
+		for(count=1; count<=50; count++) // censor 50 words per message because when i write fuck fuck the second does not get censored
+		{
+			str_CensorThisString( (char*)message );
+		}
 	}
 
 	if ( cl != NULL ) {

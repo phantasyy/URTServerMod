@@ -321,6 +321,13 @@ void SV_DirectConnect(netadr_t from) {
                 return;
             }
 
+            // I guess we're not checking for the qport 1337 hack on LAN clients.
+            if (sv_block1337->integer > 0 && qport == 1337) {
+                NET_OutOfBandPrint(NS_SERVER, from, "print\nYou are too 1337 for this server.\n");
+                Com_DPrintf("1337 qport, rejected connect from %s\n", NET_AdrToString(from));
+                return;
+            }
+
         }
 
     } else {
@@ -1410,6 +1417,7 @@ void SV_UpdateUserinfo_f( client_t *cl ) {
             Q_strncpyz(gl->pers.netname, cl->colourName, MAX_NETNAME);
 }
 
+
 /*
 ==================
 SV_Maplist_f
@@ -1513,7 +1521,6 @@ void SV_ExecuteClientCommand(client_t *cl, const char *s, qboolean clientOK) {
 			break;
 		}
 	}
-
 	if (clientOK) {
 
         // pass unknown strings to the game
@@ -1592,13 +1599,108 @@ void SV_ExecuteClientCommand(client_t *cl, const char *s, qboolean clientOK) {
 				SV_SendServerCommand(cl, "print \"Chat dropped due to message length constraints.\n\"");
 				return;
 			}
-
-			VM_Call( gvm, GAME_CLIENT_COMMAND, cl - svs.clients );
-		}
-	}
-	else if (!bProcessed) {
-		Com_DPrintf( "client text ignored for %s: %s\n", cl->name, Cmd_Argv(0) );
-	}
+            else if (Q_stricmp("callvote", Cmd_Argv(0)) == 0) {
+                Com_Printf("Callvote from %s (client #%i, %s): %s\n",
+                        cl->name, (int) (cl - svs.clients),
+                        NET_AdrToString(cl->netchan.remoteAddress), Cmd_Args());
+            }
+            if (sv_disableDefaultMaps->integer > 0 && !Q_stricmp("callvote",Cmd_Argv(0)) && (!Q_stricmp("nextmap",Cmd_Argv(1)) || !Q_stricmp("map",Cmd_Argv(1)))
+                && (!Q_stricmp("ut4_abbey", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_abbeyctf", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_algiers", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_ambush", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_austria", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_bohemia", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_casa", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_cascade", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_crossing", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_docks", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_dressingroom", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_eagle", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_elgin", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_firingrange", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_ghosttown", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_harbortown", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_herring", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_killroom", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_kingdom", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_mandolin", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_maya", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_oildepot", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_paris", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_prague", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_prominence", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_raiders", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_ramelle", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_ricochet", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_riyadh", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_sanc", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_snoppis", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_suburbs", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_subway", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_swim", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_thingley", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_tombs", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_toxic", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_tunis", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_turnpike", Cmd_Argv(2))
+                    || !Q_stricmp("ut4_uptown", Cmd_Argv(2))
+                    || !Q_stricmp("abbeyctf", Cmd_Argv(2))
+                    || !Q_stricmp("algiers", Cmd_Argv(2))
+                    || !Q_stricmp("ambush", Cmd_Argv(2))
+                    || !Q_stricmp("austria", Cmd_Argv(2))
+                    || !Q_stricmp("bohemia", Cmd_Argv(2))
+                    || !Q_stricmp("casa", Cmd_Argv(2))
+                    || !Q_stricmp("cascade", Cmd_Argv(2))
+                    || !Q_stricmp("crossing", Cmd_Argv(2))
+                    || !Q_stricmp("docks", Cmd_Argv(2))
+                    || !Q_stricmp("dressingroom", Cmd_Argv(2))
+                    || !Q_stricmp("eagle", Cmd_Argv(2))
+                    || !Q_stricmp("elgin", Cmd_Argv(2))
+                    || !Q_stricmp("firingrange", Cmd_Argv(2))
+                    || !Q_stricmp("ghosttown", Cmd_Argv(2))
+                    || !Q_stricmp("harbortown", Cmd_Argv(2))
+                    || !Q_stricmp("herring", Cmd_Argv(2))
+                    || !Q_stricmp("killroom", Cmd_Argv(2))
+                    || !Q_stricmp("kingdom", Cmd_Argv(2))
+                    || !Q_stricmp("mandolin", Cmd_Argv(2))
+                    || !Q_stricmp("maya", Cmd_Argv(2))
+                    || !Q_stricmp("oildepot", Cmd_Argv(2))
+                    || !Q_stricmp("paris", Cmd_Argv(2))
+                    || !Q_stricmp("prague", Cmd_Argv(2))
+                    || !Q_stricmp("prominence", Cmd_Argv(2))
+                    || !Q_stricmp("raiders", Cmd_Argv(2))
+                    || !Q_stricmp("ramelle", Cmd_Argv(2))
+                    || !Q_stricmp("ricochet", Cmd_Argv(2))
+                    || !Q_stricmp("riyadh", Cmd_Argv(2))
+                    || !Q_stricmp("sanc", Cmd_Argv(2))
+                    || !Q_stricmp("snoppis", Cmd_Argv(2))
+                    || !Q_stricmp("suburbs", Cmd_Argv(2))
+                    || !Q_stricmp("subway", Cmd_Argv(2))
+                    || !Q_stricmp("swim", Cmd_Argv(2))
+                    || !Q_stricmp("thingley", Cmd_Argv(2))
+                    || !Q_stricmp("tombs", Cmd_Argv(2))
+                    || !Q_stricmp("toxic", Cmd_Argv(2))
+                    || !Q_stricmp("tunis", Cmd_Argv(2))
+                    || !Q_stricmp("turnpike", Cmd_Argv(2))
+                    || !Q_stricmp("uptown", Cmd_Argv(2))
+                    )
+                
+                
+                
+                )
+            {
+                
+                
+                SV_SendServerCommand(cl, "cp \"^7This map is currently disabled\"");
+                return;
+            }
+            VM_Call( gvm, GAME_CLIENT_COMMAND, cl - svs.clients );
+        }
+    }
+    else if (!bProcessed) {
+        Com_DPrintf( "client text ignored for %s: %s\n", cl->name, Cmd_Argv(0) );
+    }
 }
 
 /*

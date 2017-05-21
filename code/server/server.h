@@ -79,6 +79,14 @@ typedef struct {
 
 	int				restartTime;
 	int				time;
+	qboolean			incognitoJoinSpec;
+
+	/////////////////////////////////////////////////////////
+	// separator for incognito.patch and specchatglobal.patch
+	/////////////////////////////////////////////////////////
+
+	char				lastSpecChat[512];
+
 } server_t;
 
 
@@ -250,7 +258,6 @@ typedef struct {
 	netadr_t	authorizeAddress;			// for rcon return messages
 } serverStatic_t;
 
-
 // The value below is how many extra characters we reserve for every instance of '$' in a
 // ut_radio, say, or similar client command.  Some jump maps have very long $location's.
 // On these maps, it may be possible to crash the server if a carefully-crafted
@@ -332,6 +339,38 @@ extern  cvar_t  *sv_colourNames;
 
 extern	cvar_t  *sv_forceGear;
 extern  cvar_t  *sv_hideChatCmd;
+
+extern	cvar_t	*sv_disableDefaultMaps;
+extern	cvar_t	*sv_specChatGlobal;
+extern	cvar_t	*sv_block1337;
+
+
+// String Replace
+extern	cvar_t	*sv_CensoredStrings;
+extern	cvar_t	*sv_CustomStrings;
+extern	cvar_t	*str_enteredthegame;
+extern	cvar_t	*str_joinedtheredteam;
+extern	cvar_t	*str_joinedtheblueteam;
+extern	cvar_t	*str_joinedthespectators;
+extern	cvar_t	*str_joinedthebattle;
+extern	cvar_t	*str_capturedblueflag;
+extern	cvar_t	*str_capturedredflag;
+extern	cvar_t	*str_hastakentheblueflag;
+extern	cvar_t	*str_hastakentheredflag;
+extern	cvar_t	*str_droppedtheredflag;
+extern	cvar_t	*str_droppedtheblueflag;
+extern	cvar_t	*str_returnedtheredflag;
+extern	cvar_t	*str_returnedtheblueflag;
+extern	cvar_t	*str_theredflaghasreturned2;
+extern	cvar_t	*str_theredflaghasreturned;
+extern	cvar_t	*str_theblueflaghasreturned2;
+extern	cvar_t	*str_theblueflaghasreturned;
+extern	cvar_t	*str_wasslappedbytheadmin;
+extern	cvar_t	*str_youvebeenslapped;
+extern	cvar_t	*str_blueteamwins;
+extern	cvar_t	*str_redteamwins;
+
+extern	cvar_t	*sv_mutewords;
 
 #ifdef USE_AUTH
 extern	cvar_t	*sv_authServerIP;

@@ -113,6 +113,7 @@ static void	(*rd_flush)( char *buffer );
 
 void Com_BeginRedirect (char *buffer, int buffersize, void (*flush)( char *) )
 {
+	in_redirect = qtrue;
 	if (!buffer || !buffersize || !flush)
 		return;
 	rd_buffer = buffer;
@@ -124,6 +125,7 @@ void Com_BeginRedirect (char *buffer, int buffersize, void (*flush)( char *) )
 
 void Com_EndRedirect (void)
 {
+	in_redirect = qfalse;
 	if ( rd_flush ) {
 		rd_flush(rd_buffer);
 	}
@@ -2411,6 +2413,8 @@ void Com_Init( char *commandLine ) {
 		Sys_Error ("Error during initialization");
 	}
 
+	in_redirect = qfalse;
+
   // bk001129 - do this before anything else decides to push events
   Com_InitPushEvent();
 
@@ -2516,7 +2520,7 @@ void Com_Init( char *commandLine ) {
 	Cmd_AddCommand ("changeVectors", MSG_ReportChangeVectors_f );
 	Cmd_AddCommand ("writeconfig", Com_WriteConfig_f );
 
-	s = va("^2-Psd`| ^7Sr8 ^1[MOD]");
+	s = va("^2-Psd`| ^7SUPER ^1[MOD]");
 	com_version = Cvar_Get ("version", s, CVAR_ROM | CVAR_SERVERINFO );
 
 	Sys_Init();

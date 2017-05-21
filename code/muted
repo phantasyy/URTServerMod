@@ -1,0 +1,578 @@
+server/sv_main.c:		if ( cl->state >= CS_CONNECTED ) {
+server/sv_main.c:				ps->persistant[PERS_SCORE], cl->ping, cl->name);
+server/sv_main.c:		if (cl->state == CS_FREE) {
+server/sv_main.c:		if ( !NET_CompareBaseAdr( from, cl->netchan.remoteAddress ) ) {
+server/sv_main.c:		if (cl->netchan.qport != qport) {
+server/sv_main.c:		if (cl->netchan.remoteAddress.port != from.port) {
+server/sv_main.c:			cl->netchan.remoteAddress.port = from.port;
+server/sv_main.c:			if (cl->state != CS_ZOMBIE) {
+server/sv_main.c:				cl->lastPacketTime = svs.time;	// don't timeout
+server/sv_main.c:Updates the cl->ping variables
+server/sv_main.c:		if ( cl->state != CS_ACTIVE ) {
+server/sv_main.c:			cl->ping = 999;
+server/sv_main.c:		if ( !cl->gentity ) {
+server/sv_main.c:			cl->ping = 999;
+server/sv_main.c:		if ( cl->gentity->r.svFlags & SVF_BOT ) {
+server/sv_main.c:			cl->ping = 0;
+server/sv_main.c:			if ( cl->frames[j].messageAcked <= 0 ) {
+server/sv_main.c:			delta = cl->frames[j].messageAcked - cl->frames[j].messageSent;
+server/sv_main.c:			cl->ping = 999;
+server/sv_main.c:			cl->ping = total/count;
+server/sv_main.c:			if ( cl->ping > 999 ) {
+server/sv_main.c:				cl->ping = 999;
+server/sv_main.c:		ps->ping = cl->ping;
+server/sv_main.c:		if (cl->lastPacketTime > svs.time) {
+server/sv_main.c:			cl->lastPacketTime = svs.time;
+server/sv_main.c:		if (cl->state == CS_ZOMBIE
+server/sv_main.c:		&& cl->lastPacketTime < zombiepoint) {
+server/sv_main.c:			// using the client id cause the cl->name is empty at this point
+server/sv_main.c:			cl->state = CS_FREE;	// can now be reused
+server/sv_main.c:		if ( cl->state >= CS_CONNECTED && cl->lastPacketTime < droppoint) {
+server/sv_main.c:			if ( ++cl->timeoutCount > 5 ) {
+server/sv_main.c:				cl->state = CS_FREE;	// don't bother with zombie state
+server/sv_main.c:			cl->timeoutCount = 0;
+server/sv_main.c:		if ( cl->state >= CS_CONNECTED && cl->netchan.remoteAddress.type != NA_BOT ) {
+server/sv_snapshot.c:		if (!cl->state) {
+server/sv_snapshot.c:			(svs.time >= cl->nextReliableUserTime)
+server/sv_snapshot.c:			&& (cl->state >= CS_ACTIVE) &&
+server/sv_snapshot.c:			(cl->userinfobuffer[0]!=0) ) 
+server/sv_snapshot.c:			sprintf(bigbuffer,"userinfo \"%s\"",cl->userinfobuffer);
+server/sv_init.c:			if (cl->state >= CS_CONNECTED) {
+server/sv_init.c:				if ( cl->netchan.remoteAddress.type != NA_LOOPBACK ) {
+server/sv_init.c:				cl->nextSnapshotTime = -1;
+server/sv_client.c:        if (cl->state == CS_FREE) {
+server/sv_client.c:        if (NET_CompareBaseAdr(from, cl->netchan.remoteAddress) && (cl->netchan.qport == qport || from.port == cl->netchan.remoteAddress.port)) {
+server/sv_client.c:            if ((svs.time - cl->lastConnectTime) < (sv_reconnectlimit->integer * 1000)) {
+server/sv_client.c:                if ( cl->state == CS_FREE ) {
+server/sv_client.c:                if ( NET_CompareBaseAdr( from, cl->netchan.remoteAddress )
+server/sv_client.c:                    && !( cl->netchan.qport == qport 
+server/sv_client.c:                    || from.port == cl->netchan.remoteAddress.port ) ) {
+server/sv_client.c:        if (cl->state == CS_FREE) {
+server/sv_client.c:        if (NET_CompareBaseAdr(from, cl->netchan.remoteAddress) && (cl->netchan.qport == qport || from.port == cl->netchan.remoteAddress.port)) {
+server/sv_client.c:        if (cl->state == CS_FREE) {
+server/sv_client.c:                if (cl->netchan.remoteAddress.type == NA_BOT) {
+server/sv_client.c:    cl->reliableAcknowledge = 0;
+server/sv_client.c:    cl->reliableSequence = 0;
+server/sv_client.c:    newcl->gentity = ent;
+server/sv_client.c:    newcl->challenge = challenge;
+server/sv_client.c:    Netchan_Setup (NS_SERVER, &newcl->netchan , from, qport);
+server/sv_client.c:    newcl->netchan_end_queue = &newcl->netchan_start_queue;
+server/sv_client.c:    newcl->demo_recording = qfalse;
+server/sv_client.c:    newcl->demo_file = -1;
+server/sv_client.c:    newcl->demo_waiting = qfalse;
+server/sv_client.c:    newcl->demo_backoff = 1;
+server/sv_client.c:    newcl->demo_deltas = 0;
+server/sv_client.c:    Q_strncpyz(newcl->userinfo, userinfo, sizeof(newcl->userinfo));
+server/sv_client.c:    Com_sprintf(cl->colourName, MAX_NAME_LENGTH, "%s^7", SV_CleanName(Info_ValueForKey(newcl->userinfo, "name")));
+server/sv_client.c:    Com_DPrintf("Going from CS_FREE to CS_CONNECTED for %s\n", newcl->name);
+server/sv_client.c:    newcl->state = CS_CONNECTED;
+server/sv_client.c:    newcl->nextSnapshotTime = svs.time;
+server/sv_client.c:    newcl->lastPacketTime = svs.time;
+server/sv_client.c:    newcl->lastConnectTime = svs.time;
+server/sv_client.c:    newcl->numcmds = 0;
+server/sv_client.c:    newcl->gamestateMessageNum = -1;
+server/sv_client.c:	if (cl->download) {
+server/sv_client.c:		FS_FCloseFile( cl->download );
+server/sv_client.c:	cl->download = 0;
+server/sv_client.c:	*cl->downloadName = 0;
+server/sv_client.c:		if (cl->downloadBlocks[i]) {
+server/sv_client.c:			Z_Free( cl->downloadBlocks[i] );
+server/sv_client.c:			cl->downloadBlocks[i] = NULL;
+server/sv_client.c:	if (*cl->downloadName)
+server/sv_client.c:		Com_DPrintf( "clientDownload: %d : file \"%s\" aborted\n", (int) (cl - svs.clients), cl->downloadName );
+server/sv_client.c:	if ( cl->state == CS_ACTIVE )
+server/sv_client.c:	Com_DPrintf( "clientDownload: %s Done\n", cl->name);
+server/sv_client.c:the same as cl->downloadClientBlock
+server/sv_client.c:	if (block == cl->downloadClientBlock) {
+server/sv_client.c:		if (cl->downloadBlockSize[cl->downloadClientBlock % MAX_DOWNLOAD_WINDOW] == 0) {
+server/sv_client.c:			Com_Printf( "clientDownload: %d : file \"%s\" completed\n", (int) (cl - svs.clients), cl->downloadName );
+server/sv_client.c:		cl->downloadSendTime = svs.time;
+server/sv_client.c:		cl->downloadClientBlock++;
+server/sv_client.c:	// cl->downloadName is non-zero now, SV_WriteDownloadToClient will see this and open
+server/sv_client.c:	Q_strncpyz( cl->downloadName, Cmd_Argv(1), sizeof(cl->downloadName) );
+server/sv_client.c:	if (!*cl->downloadName)
+server/sv_client.c:	if (!cl->download) {
+server/sv_client.c:		Com_sprintf(pakbuf, sizeof(pakbuf), "%s", cl->downloadName);
+server/sv_client.c:			( cl->downloadSize = FS_SV_FOpenFileRead( cl->downloadName, &cl->download ) ) <= 0 ) {
+server/sv_client.c:				Com_Printf("clientDownload: %d : \"%s\" is not referenced and cannot be downloaded.\n", (int) (cl - svs.clients), cl->downloadName);
+server/sv_client.c:				Com_sprintf(errorMessage, sizeof(errorMessage), "File \"%s\" is not referenced and cannot be downloaded.", cl->downloadName);
+server/sv_client.c:				Com_Printf("clientDownload: %d : \"%s\" cannot download id pk3 files\n", (int) (cl - svs.clients), cl->downloadName);
+server/sv_client.c:									"The Team Arena mission pack can be found in your local game store.", cl->downloadName);
+server/sv_client.c:					Com_sprintf(errorMessage, sizeof(errorMessage), "Cannot autodownload id pk3 file \"%s\"", cl->downloadName);
+server/sv_client.c:				Com_Printf("clientDownload: %d : \"%s\" download disabled", (int) (cl - svs.clients), cl->downloadName);
+server/sv_client.c:										"can connect to this pure server.\n", cl->downloadName);
+server/sv_client.c:                    "able to join the game anyway.\n", cl->downloadName);
+server/sv_client.c:				Com_Printf("clientDownload: %d : \"%s\" file not found on server\n", (int) (cl - svs.clients), cl->downloadName);
+server/sv_client.c:				Com_sprintf(errorMessage, sizeof(errorMessage), "File \"%s\" not found on server for autodownloading.\n", cl->downloadName);
+server/sv_client.c:			*cl->downloadName = 0;
+server/sv_client.c:		Com_Printf( "clientDownload: %d : beginning \"%s\"\n", (int) (cl - svs.clients), cl->downloadName );
+server/sv_client.c:		cl->downloadCurrentBlock = cl->downloadClientBlock = cl->downloadXmitBlock = 0;
+server/sv_client.c:		cl->downloadCount = 0;
+server/sv_client.c:		cl->downloadEOF = qfalse;
+server/sv_client.c:	while (cl->downloadCurrentBlock - cl->downloadClientBlock < MAX_DOWNLOAD_WINDOW &&
+server/sv_client.c:		cl->downloadSize != cl->downloadCount) {
+server/sv_client.c:		curindex = (cl->downloadCurrentBlock % MAX_DOWNLOAD_WINDOW);
+server/sv_client.c:		if (!cl->downloadBlocks[curindex])
+server/sv_client.c:			cl->downloadBlocks[curindex] = Z_Malloc( MAX_DOWNLOAD_BLKSIZE );
+server/sv_client.c:		cl->downloadBlockSize[curindex] = FS_Read( cl->downloadBlocks[curindex], MAX_DOWNLOAD_BLKSIZE, cl->download );
+server/sv_client.c:		if (cl->downloadBlockSize[curindex] < 0) {
+server/sv_client.c:			cl->downloadCount = cl->downloadSize;
+server/sv_client.c:		cl->downloadCount += cl->downloadBlockSize[curindex];
+server/sv_client.c:		cl->downloadCurrentBlock++;
+server/sv_client.c:	if (cl->downloadCount == cl->downloadSize &&
+server/sv_client.c:		!cl->downloadEOF &&
+server/sv_client.c:		cl->downloadCurrentBlock - cl->downloadClientBlock < MAX_DOWNLOAD_WINDOW) {
+server/sv_client.c:		cl->downloadBlockSize[cl->downloadCurrentBlock % MAX_DOWNLOAD_WINDOW] = 0;
+server/sv_client.c:		cl->downloadCurrentBlock++;
+server/sv_client.c:		cl->downloadEOF = qtrue;  // We have added the EOF block
+server/sv_client.c:	rate = cl->rate;
+server/sv_client.c:		blockspersnap = ( (rate * cl->snapshotMsec) / 1000 + MAX_DOWNLOAD_BLKSIZE ) /
+server/sv_client.c:		if (cl->downloadClientBlock == cl->downloadCurrentBlock)
+server/sv_client.c:		if (cl->downloadXmitBlock == cl->downloadCurrentBlock) {
+server/sv_client.c:			if (svs.time - cl->downloadSendTime > 1000)
+server/sv_client.c:				cl->downloadXmitBlock = cl->downloadClientBlock;
+server/sv_client.c:		curindex = (cl->downloadXmitBlock % MAX_DOWNLOAD_WINDOW);
+server/sv_client.c:		MSG_WriteShort( msg, cl->downloadXmitBlock );
+server/sv_client.c:		if ( cl->downloadXmitBlock == 0 )
+server/sv_client.c:			MSG_WriteLong( msg, cl->downloadSize );
+server/sv_client.c:		MSG_WriteShort( msg, cl->downloadBlockSize[curindex] );
+server/sv_client.c:		if ( cl->downloadBlockSize[curindex] ) {
+server/sv_client.c:			MSG_WriteData( msg, cl->downloadBlocks[curindex], cl->downloadBlockSize[curindex] );
+server/sv_client.c:		Com_DPrintf( "clientDownload: %d : writing block %d\n", (int) (cl - svs.clients), cl->downloadXmitBlock );
+server/sv_client.c:		cl->downloadXmitBlock++;
+server/sv_client.c:		cl->downloadSendTime = svs.time;
+server/sv_client.c:				Com_DPrintf("ignoring outdated cp command from client %s\n", cl->name);
+server/sv_client.c:		cl->gotCP = qtrue;
+server/sv_client.c:			cl->pureAuthentic = 1;
+server/sv_client.c:			cl->pureAuthentic = 0;
+server/sv_client.c:			cl->nextSnapshotTime = -1;
+server/sv_client.c:			cl->state = CS_ACTIVE;
+server/sv_client.c:	cl->pureAuthentic = 0;
+server/sv_client.c:	cl->gotCP = qfalse;
+server/sv_client.c:	Q_strncpyz( cl->name, Info_ValueForKey (cl->userinfo, "name"), sizeof(cl->name) );
+server/sv_client.c:    Com_sprintf(cl->colourName, MAX_NAME_LENGTH, "%s^7", SV_CleanName(cl->name));
+server/sv_client.c:	if ( Sys_IsLANAddress( cl->netchan.remoteAddress ) && com_dedicated->integer != 2 && sv_lanForceRate->integer == 1) {
+server/sv_client.c:		cl->rate = 99999;	// lans should not rate limit
+server/sv_client.c:		val = Info_ValueForKey (cl->userinfo, "rate");
+server/sv_client.c:			cl->rate = i;
+server/sv_client.c:			if (cl->rate < 1000) {
+server/sv_client.c:				cl->rate = 1000;
+server/sv_client.c:			} else if (cl->rate > 90000) {
+server/sv_client.c:				cl->rate = 90000;
+server/sv_client.c:			cl->rate = 3000;
+server/sv_client.c:	val = Info_ValueForKey (cl->userinfo, "handicap");
+server/sv_client.c:			Info_SetValueForKey( cl->userinfo, "handicap", "100" );
+server/sv_client.c:	val = Info_ValueForKey (cl->userinfo, "snaps");
+server/sv_client.c:		cl->snapshotMsec = 1000/i;
+server/sv_client.c:		cl->snapshotMsec = 50;
+server/sv_client.c:		val = Info_ValueForKey (cl->userinfo, "funred");
+server/sv_client.c:           { Info_SetValueForKey(cl->userinfo, "funred", "shit");}
+server/sv_client.c:	val = Info_ValueForKey (cl->userinfo, "funblue");
+server/sv_client.c:             { Info_SetValueForKey(cl->userinfo, "funblue", "shit");}
+server/sv_client.c:	if( NET_IsLocalAddress(cl->netchan.remoteAddress) )
+server/sv_client.c:		ip = (char*)NET_AdrToString( cl->netchan.remoteAddress );
+server/sv_client.c:	val = Info_ValueForKey( cl->userinfo, "ip" );
+server/sv_client.c:		len = strlen( ip ) - strlen( val ) + strlen( cl->userinfo );
+server/sv_client.c:		len = strlen( ip ) + 4 + strlen( cl->userinfo );
+server/sv_client.c:		Info_SetValueForKey( cl->userinfo, "ip", ip );
+server/sv_client.c:	if ( (sv_floodProtect->integer) && (cl->state >= CS_ACTIVE) && (svs.time < cl->nextReliableUserTime) ) {
+server/sv_client.c:		Q_strncpyz( cl->userinfobuffer, Cmd_Argv(1), sizeof(cl->userinfobuffer) );
+server/sv_client.c:	cl->userinfobuffer[0]=0;
+server/sv_client.c:	cl->nextReliableUserTime = svs.time + 5000;
+server/sv_client.c:	Q_strncpyz( cl->userinfo, Cmd_Argv(1), sizeof(cl->userinfo) );
+server/sv_client.c:		Info_SetValueForKey(cl->userinfo, "gear", sv_forceGear->string);
+server/sv_client.c:            Q_strncpyz(gl->pers.netname, cl->colourName, MAX_NETNAME);
+server/sv_client.c:        if ((!u->name) && (sv.state == SS_GAME) && (cl->state == CS_ACTIVE)) {
+server/sv_client.c:                        Q_strncpyz(name, cl->name, sizeof(name));
+server/sv_client.c:                        SV_SendServerCommand(cl, "chat \"^8[^7hidden^8] ^7%s: ^8%s\n\"", cl->colourName, Cmd_Args());
+server/sv_client.c:				Com_Printf("Buffer overflow exploit radio/say, possible attempt from %s\n", NET_AdrToString(cl->netchan.remoteAddress));
+server/sv_client.c:        Com_DPrintf( "client text ignored for %s: %s\n", cl->name, Cmd_Argv(0) );
+server/sv_client.c:	if ( cl->lastClientCommand >= seq ) {
+server/sv_client.c:	Com_DPrintf( "clientCommand: %s : %i : %s\n", cl->name, seq, s );
+server/sv_client.c:	if ( seq > cl->lastClientCommand + 1 ) {
+server/sv_client.c:		Com_Printf( "Client %s lost %i clientCommands\n", cl->name, 
+server/sv_client.c:			seq - cl->lastClientCommand + 1 );
+server/sv_client.c:		cl->state >= CS_ACTIVE &&
+server/sv_client.c:		if (svs.time < cl->nextReliableTime ) {
+server/sv_client.c:			if (++(cl->numcmds) > sv_floodProtect->integer ) {
+server/sv_client.c:			 cl->numcmds = 1;
+server/sv_client.c:	cl->nextReliableTime = svs.time + 1000;
+server/sv_client.c:	cl->lastClientCommand = seq;
+server/sv_client.c:	Com_sprintf(cl->lastClientCommandString, sizeof(cl->lastClientCommandString), "%s", s);
+server/sv_client.c:	cl->lastUsercmd = *cmd;
+server/sv_client.c:	if ( cl->state != CS_ACTIVE ) {
+server/sv_client.c:		cl->deltaMessage = cl->messageAcknowledge;
+server/sv_client.c:		cl->deltaMessage = -1;
+server/sv_client.c:	key ^= cl->messageAcknowledge;
+server/sv_client.c:	key ^= Com_HashKey(cl->reliableCommands[ cl->reliableAcknowledge & (MAX_RELIABLE_COMMANDS-1) ], 32);
+server/sv_client.c:	cl->frames[ cl->messageAcknowledge & PACKET_MASK ].messageAcked = svs.time;
+server/sv_client.c:	if (sv_pure->integer != 0 && cl->pureAuthentic == 0 && !cl->gotCP) {
+server/sv_client.c:		if (cl->state == CS_ACTIVE)
+server/sv_client.c:			Com_DPrintf( "%s: didn't get cp command, resending gamestate\n", cl->name);
+server/sv_client.c:	if ( cl->state == CS_PRIMED ) {
+server/sv_client.c:	if (sv_pure->integer != 0 && cl->pureAuthentic == 0) {		
+server/sv_client.c:	if ( cl->state != CS_ACTIVE ) {
+server/sv_client.c:		cl->deltaMessage = -1;
+server/sv_client.c:		if ( cmds[i].serverTime <= cl->lastUsercmd.serverTime ) {
+server/sv_client.c:	cl->messageAcknowledge = MSG_ReadLong( msg );
+server/sv_client.c:	if (cl->messageAcknowledge < 0) {
+server/sv_client.c:	cl->reliableAcknowledge = MSG_ReadLong( msg );
+server/sv_client.c:	if (cl->reliableAcknowledge < cl->reliableSequence - MAX_RELIABLE_COMMANDS) {
+server/sv_client.c:		cl->reliableAcknowledge = cl->reliableSequence;
+server/sv_client.c:	if ( serverId != sv.serverId && !*cl->downloadName && !strstr(cl->lastClientCommandString, "nextdl") ) {
+server/sv_client.c:			Com_DPrintf("%s : ignoring pre map_restart / outdated client message\n", cl->name);
+server/sv_client.c:		if ( cl->messageAcknowledge > cl->gamestateMessageNum ) {
+server/sv_client.c:			Com_DPrintf( "%s : dropped gamestate, resending\n", cl->name );
+server/sv_client.c:	if( cl->oldServerTime && serverId == sv.serverId ){
+server/sv_client.c:		Com_DPrintf( "%s acknowledged gamestate\n", cl->name );
+server/sv_client.c:		cl->oldServerTime = 0;
+server/sv_client.c:		if (cl->state == CS_ZOMBIE) {
+server/sv_bot.c:		if ( cl->state == CS_FREE ) {
+server/sv_bot.c:	cl->gentity = SV_GentityNum( i );
+server/sv_bot.c:	cl->gentity->s.number = i;
+server/sv_bot.c:	cl->state = CS_ACTIVE;
+server/sv_bot.c:	cl->lastPacketTime = svs.time;
+server/sv_bot.c:	cl->netchan.remoteAddress.type = NA_BOT;
+server/sv_bot.c:	cl->rate = 16384;
+server/sv_bot.c:	cl->state = CS_FREE;
+server/sv_bot.c:	cl->name[0] = 0;
+server/sv_bot.c:	if ( cl->gentity ) {
+server/sv_bot.c:		cl->gentity->r.svFlags &= ~SVF_BOT;
+server/sv_bot.c:	cl->lastPacketTime = svs.time;
+server/sv_bot.c:	if ( cl->reliableAcknowledge == cl->reliableSequence ) {
+server/sv_bot.c:	cl->reliableAcknowledge++;
+server/sv_bot.c:	index = cl->reliableAcknowledge & ( MAX_RELIABLE_COMMANDS - 1 );
+server/sv_bot.c:	if ( !cl->reliableCommands[index][0] ) {
+server/sv_bot.c:	Q_strncpyz( buf, cl->reliableCommands[index], size );
+server/sv_bot.c:	frame = &cl->frames[cl->netchan.outgoingSequence & PACKET_MASK];
+server/sv_bot.c:	frame = &cl->frames[cl->netchan.outgoingSequence & PACKET_MASK];
+server/sv_ccmds.c:            if(cl->state) {
+server/sv_ccmds.c:        if (!cl->state) {
+server/sv_ccmds.c:        if (!Q_stricmp(cl->name, handle)) {
+server/sv_ccmds.c:        Q_strncpyz(cleanName, cl->name, sizeof(cleanName));
+server/sv_ccmds.c:        if (!cl->state) {
+server/sv_ccmds.c:            if (!cl->state) {
+server/sv_ccmds.c:            strcpy(name, cl->name);
+server/sv_ccmds.c:                strcpy(name, cl->name);
+server/sv_ccmds.c:    if (!cl->state) {
+server/sv_ccmds.c:		if ( !cl->state ) {
+server/sv_ccmds.c:			if ( cl->state >= CS_CONNECTED ) {
+server/sv_ccmds.c:				name = cl->name;
+server/sv_ccmds.c:            if (!cl->state) {
+server/sv_ccmds.c:            if (cl->netchan.remoteAddress.type == NA_LOOPBACK) {
+server/sv_ccmds.c:            cl->lastPacketTime = svs.time;    // in case there is a funny zombie
+server/sv_ccmds.c:            if (!cl->state) {
+server/sv_ccmds.c:            if (cl->netchan.remoteAddress.type != NA_BOT) {
+server/sv_ccmds.c:            cl->lastPacketTime = svs.time;    // in case there is a funny zombie
+server/sv_ccmds.c:        if (cl->netchan.remoteAddress.type == NA_LOOPBACK) {
+server/sv_ccmds.c:        cl->lastPacketTime = svs.time;    // in case there is a funny zombie
+server/sv_ccmds.c:    if (cl->netchan.remoteAddress.type == NA_LOOPBACK) {
+server/sv_ccmds.c:                           "banUser %i.%i.%i.%i", cl->netchan.remoteAddress.ip[0], cl->netchan.remoteAddress.ip[1],
+server/sv_ccmds.c:                           cl->netchan.remoteAddress.ip[2], cl->netchan.remoteAddress.ip[3]);
+server/sv_ccmds.c:        Com_Printf("%s was banned from coming back\n", cl->name);
+server/sv_ccmds.c:    if (cl->netchan.remoteAddress.type == NA_LOOPBACK) {
+server/sv_ccmds.c:                           "banUser %i.%i.%i.%i", cl->netchan.remoteAddress.ip[0], cl->netchan.remoteAddress.ip[1],
+server/sv_ccmds.c:                           cl->netchan.remoteAddress.ip[2], cl->netchan.remoteAddress.ip[3] );
+server/sv_ccmds.c:        Com_Printf("%s was banned from coming back\n", cl->name);
+server/sv_ccmds.c:    if (cl->netchan.remoteAddress.type == NA_LOOPBACK) {
+server/sv_ccmds.c:    cl->lastPacketTime = svs.time;    // in case there is a funny zombie
+server/sv_ccmds.c:        if (!cl->state) {
+server/sv_ccmds.c:        if (cl->state == CS_CONNECTED) {
+server/sv_ccmds.c:        } else if (cl->state == CS_ZOMBIE) {
+server/sv_ccmds.c:            ping = cl->ping < 9999 ? cl->ping : 9999;
+server/sv_ccmds.c:        Com_Printf ("%s", cl->name);
+server/sv_ccmds.c:        l = 16 - strlen(cl->name);
+server/sv_ccmds.c:        Com_Printf ("%7i ", svs.time - cl->lastPacketTime );
+server/sv_ccmds.c:        s = NET_AdrToString( cl->netchan.remoteAddress );
+server/sv_ccmds.c:        Com_Printf ("%5i", cl->netchan.qport);
+server/sv_ccmds.c:        Com_Printf (" %5i", cl->rate);
+server/sv_ccmds.c:    Info_Print(cl->userinfo);
+mute:server/sv_main.c:		if ( cl->state >= CS_CONNECTED ) {
+mute:server/sv_main.c:				ps->persistant[PERS_SCORE], cl->ping, cl->name);
+mute:server/sv_main.c:		if (cl->state == CS_FREE) {
+mute:server/sv_main.c:		if ( !NET_CompareBaseAdr( from, cl->netchan.remoteAddress ) ) {
+mute:server/sv_main.c:		if (cl->netchan.qport != qport) {
+mute:server/sv_main.c:		if (cl->netchan.remoteAddress.port != from.port) {
+mute:server/sv_main.c:			cl->netchan.remoteAddress.port = from.port;
+mute:server/sv_main.c:			if (cl->state != CS_ZOMBIE) {
+mute:server/sv_main.c:				cl->lastPacketTime = svs.time;	// don't timeout
+mute:server/sv_main.c:Updates the cl->ping variables
+mute:server/sv_main.c:		if ( cl->state != CS_ACTIVE ) {
+mute:server/sv_main.c:			cl->ping = 999;
+mute:server/sv_main.c:		if ( !cl->gentity ) {
+mute:server/sv_main.c:			cl->ping = 999;
+mute:server/sv_main.c:		if ( cl->gentity->r.svFlags & SVF_BOT ) {
+mute:server/sv_main.c:			cl->ping = 0;
+mute:server/sv_main.c:			if ( cl->frames[j].messageAcked <= 0 ) {
+mute:server/sv_main.c:			delta = cl->frames[j].messageAcked - cl->frames[j].messageSent;
+mute:server/sv_main.c:			cl->ping = 999;
+mute:server/sv_main.c:			cl->ping = total/count;
+mute:server/sv_main.c:			if ( cl->ping > 999 ) {
+mute:server/sv_main.c:				cl->ping = 999;
+mute:server/sv_main.c:		ps->ping = cl->ping;
+mute:server/sv_main.c:		if (cl->lastPacketTime > svs.time) {
+mute:server/sv_main.c:			cl->lastPacketTime = svs.time;
+mute:server/sv_main.c:		if (cl->state == CS_ZOMBIE
+mute:server/sv_main.c:		&& cl->lastPacketTime < zombiepoint) {
+mute:server/sv_main.c:			// using the client id cause the cl->name is empty at this point
+mute:server/sv_main.c:			cl->state = CS_FREE;	// can now be reused
+mute:server/sv_main.c:		if ( cl->state >= CS_CONNECTED && cl->lastPacketTime < droppoint) {
+mute:server/sv_main.c:			if ( ++cl->timeoutCount > 5 ) {
+mute:server/sv_main.c:				cl->state = CS_FREE;	// don't bother with zombie state
+mute:server/sv_main.c:			cl->timeoutCount = 0;
+mute:server/sv_main.c:		if ( cl->state >= CS_CONNECTED && cl->netchan.remoteAddress.type != NA_BOT ) {
+mute:server/sv_snapshot.c:		if (!cl->state) {
+mute:server/sv_snapshot.c:			(svs.time >= cl->nextReliableUserTime)
+mute:server/sv_snapshot.c:			&& (cl->state >= CS_ACTIVE) &&
+mute:server/sv_snapshot.c:			(cl->userinfobuffer[0]!=0) ) 
+mute:server/sv_snapshot.c:			sprintf(bigbuffer,"userinfo \"%s\"",cl->userinfobuffer);
+mute:server/sv_init.c:			if (cl->state >= CS_CONNECTED) {
+mute:server/sv_init.c:				if ( cl->netchan.remoteAddress.type != NA_LOOPBACK ) {
+mute:server/sv_init.c:				cl->nextSnapshotTime = -1;
+mute:server/sv_client.c:        if (cl->state == CS_FREE) {
+mute:server/sv_client.c:        if (NET_CompareBaseAdr(from, cl->netchan.remoteAddress) && (cl->netchan.qport == qport || from.port == cl->netchan.remoteAddress.port)) {
+mute:server/sv_client.c:            if ((svs.time - cl->lastConnectTime) < (sv_reconnectlimit->integer * 1000)) {
+mute:server/sv_client.c:                if ( cl->state == CS_FREE ) {
+mute:server/sv_client.c:                if ( NET_CompareBaseAdr( from, cl->netchan.remoteAddress )
+mute:server/sv_client.c:                    && !( cl->netchan.qport == qport 
+mute:server/sv_client.c:                    || from.port == cl->netchan.remoteAddress.port ) ) {
+mute:server/sv_client.c:        if (cl->state == CS_FREE) {
+mute:server/sv_client.c:        if (NET_CompareBaseAdr(from, cl->netchan.remoteAddress) && (cl->netchan.qport == qport || from.port == cl->netchan.remoteAddress.port)) {
+mute:server/sv_client.c:        if (cl->state == CS_FREE) {
+mute:server/sv_client.c:                if (cl->netchan.remoteAddress.type == NA_BOT) {
+mute:server/sv_client.c:    cl->reliableAcknowledge = 0;
+mute:server/sv_client.c:    cl->reliableSequence = 0;
+mute:server/sv_client.c:    newcl->gentity = ent;
+mute:server/sv_client.c:    newcl->challenge = challenge;
+mute:server/sv_client.c:    Netchan_Setup (NS_SERVER, &newcl->netchan , from, qport);
+mute:server/sv_client.c:    newcl->netchan_end_queue = &newcl->netchan_start_queue;
+mute:server/sv_client.c:    newcl->demo_recording = qfalse;
+mute:server/sv_client.c:    newcl->demo_file = -1;
+mute:server/sv_client.c:    newcl->demo_waiting = qfalse;
+mute:server/sv_client.c:    newcl->demo_backoff = 1;
+mute:server/sv_client.c:    newcl->demo_deltas = 0;
+mute:server/sv_client.c:    Q_strncpyz(newcl->userinfo, userinfo, sizeof(newcl->userinfo));
+mute:server/sv_client.c:    Com_sprintf(cl->colourName, MAX_NAME_LENGTH, "%s^7", SV_CleanName(Info_ValueForKey(newcl->userinfo, "name")));
+mute:server/sv_client.c:    Com_DPrintf("Going from CS_FREE to CS_CONNECTED for %s\n", newcl->name);
+mute:server/sv_client.c:    newcl->state = CS_CONNECTED;
+mute:server/sv_client.c:    newcl->nextSnapshotTime = svs.time;
+mute:server/sv_client.c:    newcl->lastPacketTime = svs.time;
+mute:server/sv_client.c:    newcl->lastConnectTime = svs.time;
+mute:server/sv_client.c:    newcl->numcmds = 0;
+mute:server/sv_client.c:    newcl->gamestateMessageNum = -1;
+mute:server/sv_client.c:	if (cl->download) {
+mute:server/sv_client.c:		FS_FCloseFile( cl->download );
+mute:server/sv_client.c:	cl->download = 0;
+mute:server/sv_client.c:	*cl->downloadName = 0;
+mute:server/sv_client.c:		if (cl->downloadBlocks[i]) {
+mute:server/sv_client.c:			Z_Free( cl->downloadBlocks[i] );
+mute:server/sv_client.c:			cl->downloadBlocks[i] = NULL;
+mute:server/sv_client.c:	if (*cl->downloadName)
+mute:server/sv_client.c:		Com_DPrintf( "clientDownload: %d : file \"%s\" aborted\n", (int) (cl - svs.clients), cl->downloadName );
+mute:server/sv_client.c:	if ( cl->state == CS_ACTIVE )
+mute:server/sv_client.c:	Com_DPrintf( "clientDownload: %s Done\n", cl->name);
+mute:server/sv_client.c:the same as cl->downloadClientBlock
+mute:server/sv_client.c:	if (block == cl->downloadClientBlock) {
+mute:server/sv_client.c:		if (cl->downloadBlockSize[cl->downloadClientBlock % MAX_DOWNLOAD_WINDOW] == 0) {
+mute:server/sv_client.c:			Com_Printf( "clientDownload: %d : file \"%s\" completed\n", (int) (cl - svs.clients), cl->downloadName );
+mute:server/sv_client.c:		cl->downloadSendTime = svs.time;
+mute:server/sv_client.c:		cl->downloadClientBlock++;
+mute:server/sv_client.c:	// cl->downloadName is non-zero now, SV_WriteDownloadToClient will see this and open
+mute:server/sv_client.c:	Q_strncpyz( cl->downloadName, Cmd_Argv(1), sizeof(cl->downloadName) );
+mute:server/sv_client.c:	if (!*cl->downloadName)
+mute:server/sv_client.c:	if (!cl->download) {
+mute:server/sv_client.c:		Com_sprintf(pakbuf, sizeof(pakbuf), "%s", cl->downloadName);
+mute:server/sv_client.c:			( cl->downloadSize = FS_SV_FOpenFileRead( cl->downloadName, &cl->download ) ) <= 0 ) {
+mute:server/sv_client.c:				Com_Printf("clientDownload: %d : \"%s\" is not referenced and cannot be downloaded.\n", (int) (cl - svs.clients), cl->downloadName);
+mute:server/sv_client.c:				Com_sprintf(errorMessage, sizeof(errorMessage), "File \"%s\" is not referenced and cannot be downloaded.", cl->downloadName);
+mute:server/sv_client.c:				Com_Printf("clientDownload: %d : \"%s\" cannot download id pk3 files\n", (int) (cl - svs.clients), cl->downloadName);
+mute:server/sv_client.c:									"The Team Arena mission pack can be found in your local game store.", cl->downloadName);
+mute:server/sv_client.c:					Com_sprintf(errorMessage, sizeof(errorMessage), "Cannot autodownload id pk3 file \"%s\"", cl->downloadName);
+mute:server/sv_client.c:				Com_Printf("clientDownload: %d : \"%s\" download disabled", (int) (cl - svs.clients), cl->downloadName);
+mute:server/sv_client.c:										"can connect to this pure server.\n", cl->downloadName);
+mute:server/sv_client.c:                    "able to join the game anyway.\n", cl->downloadName);
+mute:server/sv_client.c:				Com_Printf("clientDownload: %d : \"%s\" file not found on server\n", (int) (cl - svs.clients), cl->downloadName);
+mute:server/sv_client.c:				Com_sprintf(errorMessage, sizeof(errorMessage), "File \"%s\" not found on server for autodownloading.\n", cl->downloadName);
+mute:server/sv_client.c:			*cl->downloadName = 0;
+mute:server/sv_client.c:		Com_Printf( "clientDownload: %d : beginning \"%s\"\n", (int) (cl - svs.clients), cl->downloadName );
+mute:server/sv_client.c:		cl->downloadCurrentBlock = cl->downloadClientBlock = cl->downloadXmitBlock = 0;
+mute:server/sv_client.c:		cl->downloadCount = 0;
+mute:server/sv_client.c:		cl->downloadEOF = qfalse;
+mute:server/sv_client.c:	while (cl->downloadCurrentBlock - cl->downloadClientBlock < MAX_DOWNLOAD_WINDOW &&
+mute:server/sv_client.c:		cl->downloadSize != cl->downloadCount) {
+mute:server/sv_client.c:		curindex = (cl->downloadCurrentBlock % MAX_DOWNLOAD_WINDOW);
+mute:server/sv_client.c:		if (!cl->downloadBlocks[curindex])
+mute:server/sv_client.c:			cl->downloadBlocks[curindex] = Z_Malloc( MAX_DOWNLOAD_BLKSIZE );
+mute:server/sv_client.c:		cl->downloadBlockSize[curindex] = FS_Read( cl->downloadBlocks[curindex], MAX_DOWNLOAD_BLKSIZE, cl->download );
+mute:server/sv_client.c:		if (cl->downloadBlockSize[curindex] < 0) {
+mute:server/sv_client.c:			cl->downloadCount = cl->downloadSize;
+mute:server/sv_client.c:		cl->downloadCount += cl->downloadBlockSize[curindex];
+mute:server/sv_client.c:		cl->downloadCurrentBlock++;
+mute:server/sv_client.c:	if (cl->downloadCount == cl->downloadSize &&
+mute:server/sv_client.c:		!cl->downloadEOF &&
+mute:server/sv_client.c:		cl->downloadCurrentBlock - cl->downloadClientBlock < MAX_DOWNLOAD_WINDOW) {
+mute:server/sv_client.c:		cl->downloadBlockSize[cl->downloadCurrentBlock % MAX_DOWNLOAD_WINDOW] = 0;
+mute:server/sv_client.c:		cl->downloadCurrentBlock++;
+mute:server/sv_client.c:		cl->downloadEOF = qtrue;  // We have added the EOF block
+mute:server/sv_client.c:	rate = cl->rate;
+mute:server/sv_client.c:		blockspersnap = ( (rate * cl->snapshotMsec) / 1000 + MAX_DOWNLOAD_BLKSIZE ) /
+mute:server/sv_client.c:		if (cl->downloadClientBlock == cl->downloadCurrentBlock)
+mute:server/sv_client.c:		if (cl->downloadXmitBlock == cl->downloadCurrentBlock) {
+mute:server/sv_client.c:			if (svs.time - cl->downloadSendTime > 1000)
+mute:server/sv_client.c:				cl->downloadXmitBlock = cl->downloadClientBlock;
+mute:server/sv_client.c:		curindex = (cl->downloadXmitBlock % MAX_DOWNLOAD_WINDOW);
+mute:server/sv_client.c:		MSG_WriteShort( msg, cl->downloadXmitBlock );
+mute:server/sv_client.c:		if ( cl->downloadXmitBlock == 0 )
+mute:server/sv_client.c:			MSG_WriteLong( msg, cl->downloadSize );
+mute:server/sv_client.c:		MSG_WriteShort( msg, cl->downloadBlockSize[curindex] );
+mute:server/sv_client.c:		if ( cl->downloadBlockSize[curindex] ) {
+mute:server/sv_client.c:			MSG_WriteData( msg, cl->downloadBlocks[curindex], cl->downloadBlockSize[curindex] );
+mute:server/sv_client.c:		Com_DPrintf( "clientDownload: %d : writing block %d\n", (int) (cl - svs.clients), cl->downloadXmitBlock );
+mute:server/sv_client.c:		cl->downloadXmitBlock++;
+mute:server/sv_client.c:		cl->downloadSendTime = svs.time;
+mute:server/sv_client.c:				Com_DPrintf("ignoring outdated cp command from client %s\n", cl->name);
+mute:server/sv_client.c:		cl->gotCP = qtrue;
+mute:server/sv_client.c:			cl->pureAuthentic = 1;
+mute:server/sv_client.c:			cl->pureAuthentic = 0;
+mute:server/sv_client.c:			cl->nextSnapshotTime = -1;
+mute:server/sv_client.c:			cl->state = CS_ACTIVE;
+mute:server/sv_client.c:	cl->pureAuthentic = 0;
+mute:server/sv_client.c:	cl->gotCP = qfalse;
+mute:server/sv_client.c:	Q_strncpyz( cl->name, Info_ValueForKey (cl->userinfo, "name"), sizeof(cl->name) );
+mute:server/sv_client.c:    Com_sprintf(cl->colourName, MAX_NAME_LENGTH, "%s^7", SV_CleanName(cl->name));
+mute:server/sv_client.c:	if ( Sys_IsLANAddress( cl->netchan.remoteAddress ) && com_dedicated->integer != 2 && sv_lanForceRate->integer == 1) {
+mute:server/sv_client.c:		cl->rate = 99999;	// lans should not rate limit
+mute:server/sv_client.c:		val = Info_ValueForKey (cl->userinfo, "rate");
+mute:server/sv_client.c:			cl->rate = i;
+mute:server/sv_client.c:			if (cl->rate < 1000) {
+mute:server/sv_client.c:				cl->rate = 1000;
+mute:server/sv_client.c:			} else if (cl->rate > 90000) {
+mute:server/sv_client.c:				cl->rate = 90000;
+mute:server/sv_client.c:			cl->rate = 3000;
+mute:server/sv_client.c:	val = Info_ValueForKey (cl->userinfo, "handicap");
+mute:server/sv_client.c:			Info_SetValueForKey( cl->userinfo, "handicap", "100" );
+mute:server/sv_client.c:	val = Info_ValueForKey (cl->userinfo, "snaps");
+mute:server/sv_client.c:		cl->snapshotMsec = 1000/i;
+mute:server/sv_client.c:		cl->snapshotMsec = 50;
+mute:server/sv_client.c:		val = Info_ValueForKey (cl->userinfo, "funred");
+mute:server/sv_client.c:           { Info_SetValueForKey(cl->userinfo, "funred", "shit");}
+mute:server/sv_client.c:	val = Info_ValueForKey (cl->userinfo, "funblue");
+mute:server/sv_client.c:             { Info_SetValueForKey(cl->userinfo, "funblue", "shit");}
+mute:server/sv_client.c:	if( NET_IsLocalAddress(cl->netchan.remoteAddress) )
+mute:server/sv_client.c:		ip = (char*)NET_AdrToString( cl->netchan.remoteAddress );
+mute:server/sv_client.c:	val = Info_ValueForKey( cl->userinfo, "ip" );
+mute:server/sv_client.c:		len = strlen( ip ) - strlen( val ) + strlen( cl->userinfo );
+mute:server/sv_client.c:		len = strlen( ip ) + 4 + strlen( cl->userinfo );
+mute:server/sv_client.c:		Info_SetValueForKey( cl->userinfo, "ip", ip );
+mute:server/sv_client.c:	if ( (sv_floodProtect->integer) && (cl->state >= CS_ACTIVE) && (svs.time < cl->nextReliableUserTime) ) {
+mute:server/sv_client.c:		Q_strncpyz( cl->userinfobuffer, Cmd_Argv(1), sizeof(cl->userinfobuffer) );
+mute:server/sv_client.c:	cl->userinfobuffer[0]=0;
+mute:server/sv_client.c:	cl->nextReliableUserTime = svs.time + 5000;
+mute:server/sv_client.c:	Q_strncpyz( cl->userinfo, Cmd_Argv(1), sizeof(cl->userinfo) );
+mute:server/sv_client.c:		Info_SetValueForKey(cl->userinfo, "gear", sv_forceGear->string);
+mute:server/sv_client.c:            Q_strncpyz(gl->pers.netname, cl->colourName, MAX_NETNAME);
+mute:server/sv_client.c:        if ((!u->name) && (sv.state == SS_GAME) && (cl->state == CS_ACTIVE)) {
+mute:server/sv_client.c:                        Q_strncpyz(name, cl->name, sizeof(name));
+mute:server/sv_client.c:                        SV_SendServerCommand(cl, "chat \"^8[^7hidden^8] ^7%s: ^8%s\n\"", cl->colourName, Cmd_Args());
+mute:server/sv_client.c:				Com_Printf("Buffer overflow exploit radio/say, possible attempt from %s\n", NET_AdrToString(cl->netchan.remoteAddress));
+mute:server/sv_client.c:        Com_DPrintf( "client text ignored for %s: %s\n", cl->name, Cmd_Argv(0) );
+mute:server/sv_client.c:	if ( cl->lastClientCommand >= seq ) {
+mute:server/sv_client.c:	Com_DPrintf( "clientCommand: %s : %i : %s\n", cl->name, seq, s );
+mute:server/sv_client.c:	if ( seq > cl->lastClientCommand + 1 ) {
+mute:server/sv_client.c:		Com_Printf( "Client %s lost %i clientCommands\n", cl->name, 
+mute:server/sv_client.c:			seq - cl->lastClientCommand + 1 );
+mute:server/sv_client.c:		cl->state >= CS_ACTIVE &&
+mute:server/sv_client.c:		if (svs.time < cl->nextReliableTime ) {
+mute:server/sv_client.c:			if (++(cl->numcmds) > sv_floodProtect->integer ) {
+mute:server/sv_client.c:			 cl->numcmds = 1;
+mute:server/sv_client.c:	cl->nextReliableTime = svs.time + 1000;
+mute:server/sv_client.c:	cl->lastClientCommand = seq;
+mute:server/sv_client.c:	Com_sprintf(cl->lastClientCommandString, sizeof(cl->lastClientCommandString), "%s", s);
+mute:server/sv_client.c:	cl->lastUsercmd = *cmd;
+mute:server/sv_client.c:	if ( cl->state != CS_ACTIVE ) {
+mute:server/sv_client.c:		cl->deltaMessage = cl->messageAcknowledge;
+mute:server/sv_client.c:		cl->deltaMessage = -1;
+mute:server/sv_client.c:	key ^= cl->messageAcknowledge;
+mute:server/sv_client.c:	key ^= Com_HashKey(cl->reliableCommands[ cl->reliableAcknowledge & (MAX_RELIABLE_COMMANDS-1) ], 32);
+mute:server/sv_client.c:	cl->frames[ cl->messageAcknowledge & PACKET_MASK ].messageAcked = svs.time;
+mute:server/sv_client.c:	if (sv_pure->integer != 0 && cl->pureAuthentic == 0 && !cl->gotCP) {
+mute:server/sv_client.c:		if (cl->state == CS_ACTIVE)
+mute:server/sv_client.c:			Com_DPrintf( "%s: didn't get cp command, resending gamestate\n", cl->name);
+mute:server/sv_client.c:	if ( cl->state == CS_PRIMED ) {
+mute:server/sv_client.c:	if (sv_pure->integer != 0 && cl->pureAuthentic == 0) {		
+mute:server/sv_client.c:	if ( cl->state != CS_ACTIVE ) {
+mute:server/sv_client.c:		cl->deltaMessage = -1;
+mute:server/sv_client.c:		if ( cmds[i].serverTime <= cl->lastUsercmd.serverTime ) {
+mute:server/sv_client.c:	cl->messageAcknowledge = MSG_ReadLong( msg );
+mute:server/sv_client.c:	if (cl->messageAcknowledge < 0) {
+mute:server/sv_client.c:	cl->reliableAcknowledge = MSG_ReadLong( msg );
+mute:server/sv_client.c:	if (cl->reliableAcknowledge < cl->reliableSequence - MAX_RELIABLE_COMMANDS) {
+mute:server/sv_client.c:		cl->reliableAcknowledge = cl->reliableSequence;
+mute:server/sv_client.c:	if ( serverId != sv.serverId && !*cl->downloadName && !strstr(cl->lastClientCommandString, "nextdl") ) {
+mute:server/sv_client.c:			Com_DPrintf("%s : ignoring pre map_restart / outdated client message\n", cl->name);
+mute:server/sv_client.c:		if ( cl->messageAcknowledge > cl->gamestateMessageNum ) {
+mute:server/sv_client.c:			Com_DPrintf( "%s : dropped gamestate, resending\n", cl->name );
+mute:server/sv_client.c:	if( cl->oldServerTime && serverId == sv.serverId ){
+mute:server/sv_client.c:		Com_DPrintf( "%s acknowledged gamestate\n", cl->name );
+mute:server/sv_client.c:		cl->oldServerTime = 0;
+mute:server/sv_client.c:		if (cl->state == CS_ZOMBIE) {
+mute:server/sv_bot.c:		if ( cl->state == CS_FREE ) {
+mute:server/sv_bot.c:	cl->gentity = SV_GentityNum( i );
+mute:server/sv_bot.c:	cl->gentity->s.number = i;
+mute:server/sv_bot.c:	cl->state = CS_ACTIVE;
+mute:server/sv_bot.c:	cl->lastPacketTime = svs.time;
+mute:server/sv_bot.c:	cl->netchan.remoteAddress.type = NA_BOT;
+mute:server/sv_bot.c:	cl->rate = 16384;
+mute:server/sv_bot.c:	cl->state = CS_FREE;
+mute:server/sv_bot.c:	cl->name[0] = 0;
+mute:server/sv_bot.c:	if ( cl->gentity ) {
+mute:server/sv_bot.c:		cl->gentity->r.svFlags &= ~SVF_BOT;
+mute:server/sv_bot.c:	cl->lastPacketTime = svs.time;
+mute:server/sv_bot.c:	if ( cl->reliableAcknowledge == cl->reliableSequence ) {
+mute:server/sv_bot.c:	cl->reliableAcknowledge++;
+mute:server/sv_bot.c:	index = cl->reliableAcknowledge & ( MAX_RELIABLE_COMMANDS - 1 );
+mute:server/sv_bot.c:	if ( !cl->reliableCommands[index][0] ) {
+mute:server/sv_bot.c:	Q_strncpyz( buf, cl->reliableCommands[index], size );
+mute:server/sv_bot.c:	frame = &cl->frames[cl->netchan.outgoingSequence & PACKET_MASK];
+mute:server/sv_bot.c:	frame = &cl->frames[cl->netchan.outgoingSequence & PACKET_MASK];
+mute:server/sv_ccmds.c:            if(cl->state) {
+mute:server/sv_ccmds.c:        if (!cl->state) {
+mute:server/sv_ccmds.c:        if (!Q_stricmp(cl->name, handle)) {
+mute:server/sv_ccmds.c:        Q_strncpyz(cleanName, cl->name, sizeof(cleanName));
+mute:server/sv_ccmds.c:        if (!cl->state) {
+mute:server/sv_ccmds.c:            if (!cl->state) {
+mute:server/sv_ccmds.c:            strcpy(name, cl->name);
+mute:server/sv_ccmds.c:                strcpy(name, cl->name);
+mute:server/sv_ccmds.c:    if (!cl->state) {
+mute:server/sv_ccmds.c:		if ( !cl->state ) {
+mute:server/sv_ccmds.c:			if ( cl->state >= CS_CONNECTED ) {
+mute:server/sv_ccmds.c:				name = cl->name;
+mute:server/sv_ccmds.c:            if (!cl->state) {
+mute:server/sv_ccmds.c:            if (cl->netchan.remoteAddress.type == NA_LOOPBACK) {
+mute:server/sv_ccmds.c:            cl->lastPacketTime = svs.time;    // in case there is a funny zombie
+mute:server/sv_ccmds.c:            if (!cl->state) {
+mute:server/sv_ccmds.c:            if (cl->netchan.remoteAddress.type != NA_BOT) {
+mute:server/sv_ccmds.c:            cl->lastPacketTime = svs.time;    // in case there is a funny zombie
+mute:server/sv_ccmds.c:        if (cl->netchan.remoteAddress.type == NA_LOOPBACK) {
+mute:server/sv_ccmds.c:        cl->lastPacketTime = svs.time;    // in case there is a funny zombie
+mute:server/sv_ccmds.c:    if (cl->netchan.remoteAddress.type == NA_LOOPBACK) {
+mute:server/sv_ccmds.c:                           "banUser %i.%i.%i.%i", cl->netchan.remoteAddress.ip[0], cl->netchan.remoteAddress.ip[1],
+mute:server/sv_ccmds.c:                           cl->netchan.remoteAddress.ip[2], cl->netchan.remoteAddress.ip[3]);
+mute:server/sv_ccmds.c:        Com_Printf("%s was banned from coming back\n", cl->name);
+mute:server/sv_ccmds.c:    if (cl->netchan.remoteAddress.type == NA_LOOPBACK) {
+mute:server/sv_ccmds.c:                           "banUser %i.%i.%i.%i", cl->netchan.remoteAddress.ip[0], cl->netchan.remoteAddress.ip[1],
+mute:server/sv_ccmds.c:                           cl->netchan.remoteAddress.ip[2], cl->netchan.remoteAddress.ip[3] );
+mute:server/sv_ccmds.c:        Com_Printf("%s was banned from coming back\n", cl->name);
+mute:server/sv_ccmds.c:    if (cl->netchan.remoteAddress.type == NA_LOOPBACK) {
+mute:server/sv_ccmds.c:    cl->lastPacketTime = svs.time;    // in case there is a funny zombie
+mute:server/sv_ccmds.c:        if (!cl->state) {
+mute:server/sv_ccmds.c:        if (cl->state == CS_CONNECTED) {
+mute:server/sv_ccmds.c:        } else if (cl->state == CS_ZOMBIE) {
+mute:server/sv_ccmds.c:            ping = cl->ping < 9999 ? cl->ping : 9999;
+mute:server/sv_ccmds.c:        Com_Printf ("%s", cl->name);
+mute:server/sv_ccmds.c:        l = 16 - strlen(cl->name);
+mute:server/sv_ccmds.c:        Com_Printf ("%7i ", svs.time - cl->lastPacketTime );
+mute:server/sv_ccmds.c:        s = NET_AdrToString( cl->netchan.remoteAddress );
+mute:server/sv_ccmds.c:        Com_Printf ("%5i", cl->netchan.qport);
+mute:server/sv_ccmds.c:        Com_Printf (" %5i", cl->rate);
+mute:server/sv_ccmds.c:    Info_Print(cl->userinfo);
