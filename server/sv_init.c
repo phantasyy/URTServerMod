@@ -954,13 +954,13 @@ void SV_Init (void) {
 	sv_forceGear = Cvar_Get("sv_forceGear", "", CVAR_ARCHIVE);
 
 
-	sv_disableDefaultMaps = Cvar_Get("sv_disableDefaultMaps", "0", CVAR_ARCHIVE);
+	sv_disableDefaultMaps = Cvar_Get("sv_disableDefaultMaps", "1", CVAR_ARCHIVE);
 	sv_specChatGlobal = Cvar_Get ("sv_specChatGlobal", "1", CVAR_ARCHIVE );
 	sv_block1337 = Cvar_Get ("sv_block1337", "1", CVAR_ARCHIVE );
 
     // String Replace
-    sv_CensoredStrings = Cvar_Get("sv_CensoredStrings", "0", CVAR_ARCHIVE);
-    sv_CustomStrings = Cvar_Get("sv_CustomStrings", "0", CVAR_ARCHIVE);
+    sv_CensoredStrings = Cvar_Get("sv_CensoredStrings", "1", CVAR_ARCHIVE);
+    sv_CustomStrings = Cvar_Get("sv_CustomStrings", "1", CVAR_ARCHIVE);
 	str_enteredthegame = Cvar_Get("str_enteredthegame", "^7 entered the game", CVAR_ARCHIVE);
 	str_joinedtheredteam = Cvar_Get("str_joinedtheredteam", "^7 joined the red team.", CVAR_ARCHIVE);
 	str_joinedtheblueteam = Cvar_Get("str_joinedtheblueteam", "^7 joined the blue team.", CVAR_ARCHIVE);
@@ -983,7 +983,7 @@ void SV_Init (void) {
 	str_blueteamwins = Cvar_Get("str_blueteamwins", "^4Blue^7 team wins", CVAR_ARCHIVE);
 	str_redteamwins = Cvar_Get("str_redteamwins", "^1Red^7 team wins", CVAR_ARCHIVE);
     
-    sv_mutewords = Cvar_Get("sv_mutewords", "", CVAR_ARCHIVE);
+    sv_mutewords = Cvar_Get("sv_mutewords", "1", CVAR_ARCHIVE);
 
 	#ifdef USE_AUTH
 	sv_authServerIP = Cvar_Get("sv_authServerIP", "", CVAR_TEMP | CVAR_ROM);
