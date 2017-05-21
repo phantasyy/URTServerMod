@@ -2,7 +2,7 @@
 **The server mod that has everything you need for a complete UrT server; infinite stamina, no fall damage, colours names, infinite wall jumps, hide chat cmds and funstuff replacement**
 
 ## Cvar/Usage
-It contains all the original cvars and 5 more for control the mods added. All mods are enabled by default you can use the following commands for disable it (to enable just replace '0' with '1'):
+It contains all the original cvars and 10 more for control the mods added. All mods are enabled by default you can use the following commands for disable it (to enable just replace '0' with '1'):
 
  > set sv_infiniteStamina 0
 
@@ -16,14 +16,35 @@ It contains all the original cvars and 5 more for control the mods added. All mo
  
  > set sv_noKnife 0
  
- >set sv_forceGear ""
+ > set sv_forceGear ""
  
+ > set sv_specChatGlobal "0"
  
+ > set sv_block1337 "0"
+ 
+ > set disableDefaultMaps "0"
+
+If you wish to add more than just the default maps you can modify it in sv_client.c
+
 Every message executed with a ! @ & and / will be hidden.
 
 To use forceGear take the weapons&Gears you want then type /gear in console and put that gear code into the sv_forceGear command.
 
 If you wish to add or edit the funstuff replacement go to code/server/sv_client.c and starting at line 1346 you will see how the function works and you can add more funstuff if you wish. It is of course also possible to change the replacement to another funstuff than "shit".
+
+For users with access to command I also brought to you a few more features.
+
+ > forcecvar
+You can use forcecvar to change a name on a player and much more.
+Usage: forcecvar "player name" "cvar" "cvar value". Can also use allbots.
+
+> sendclientcommand 
+Send a reliable command to a specific client. 
+Usage: sendclientcommand "playername" "command". Can also use all or allbots.
+
+> teleport
+Simply Teleport "player1" to "player2". Works whether or not allowgoto is off for the player. Also works in all modes.
+
 
 ## Installation
 You can download directly the binaries from https://github.com/phantasyy/URTServerMod/tree/master/binaries .
