@@ -2,7 +2,7 @@
 **The server mod that has everything you need for a complete UrT server; infinite stamina, no fall damage, colours names, infinite wall jumps, hide chat cmds and funstuff replacement**
 
 ## Cvar/Usage
-It contains all the original cvars and 10 more for control the mods added. All mods except for noKnife are enabled by default if you didn't add the cvar's to your server config. You can use the following commands for disable it (to enable just replace '0' with '1'):
+It contains all the original cvars and 10 more for control the mods added. All mods are disabled by default. If you want to enable add the cvar's to your server config. You can use the following commands to enable it (to enable just replace '0' with '1'):
 
  > set sv_infiniteStamina 0
 
@@ -22,7 +22,7 @@ It contains all the original cvars and 10 more for control the mods added. All m
  
  > set sv_block1337 "0"
  
- > set sv_disableDefaultMaps "0"
+ > set sv_disableMaps "0"
 
 If you wish to add more than just the default maps you can modify it in sv_client.c
 
