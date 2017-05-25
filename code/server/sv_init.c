@@ -943,14 +943,14 @@ void SV_Init (void) {
 	sv_demofolder = Cvar_Get ("sv_demofolder", "serverdemos", CVAR_ARCHIVE );
 	
         //MinMod Variables
-	sv_infiniteStamina = Cvar_Get ("sv_infiniteStamina", "1", CVAR_ARCHIVE);
-	sv_infiniteWallJumps = Cvar_Get ("sv_infiniteWallJumps", "1", CVAR_ARCHIVE);
-	sv_nofallDamage = Cvar_Get("sv_nofallDamage", "1", CVAR_ARCHIVE);
+	sv_infiniteStamina = Cvar_Get ("sv_infiniteStamina", "0", CVAR_ARCHIVE);
+	sv_infiniteWallJumps = Cvar_Get ("sv_infiniteWallJumps", "0", CVAR_ARCHIVE);
+	sv_nofallDamage = Cvar_Get("sv_nofallDamage", "0", CVAR_ARCHIVE);
 
-	sv_colourNames = Cvar_Get ("sv_colournames", "1", CVAR_ARCHIVE);
+	sv_colourNames = Cvar_Get ("sv_colournames", "0", CVAR_ARCHIVE);
 	sv_noKnife = Cvar_Get("sv_noKnife", "0", CVAR_ARCHIVE);
 
-	sv_hideChatCmd = Cvar_Get("sv_hideChatCmd", "1", CVAR_ARCHIVE);
+	sv_hideChatCmd = Cvar_Get("sv_hideChatCmd", "0", CVAR_ARCHIVE);
 	sv_forceGear = Cvar_Get("sv_forceGear", "", CVAR_ARCHIVE);
 
 	sv_specChatGlobal = Cvar_Get ("sv_specChatGlobal", "0", CVAR_ARCHIVE );
