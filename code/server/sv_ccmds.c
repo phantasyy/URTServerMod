@@ -651,6 +651,168 @@ static void SV_MapRestart_f( void ) {
 	svs.time += 100;
 }
 
+/*
+==================
+SV_SendClientCommand_f
+
+Send a reliable command to a specific client.
+==================
+*/
+static void SV_SendClientCommand_f(void) {
+    client_t    *cl;
+    char        *cmd;
+
+    // Make sure server is running.
+    if (!com_sv_running->integer) {
+        Com_Printf("Server is not running.\n");
+        return;
+    }
+
+    if (Cmd_Argc() < 3 || strlen(Cmd_Argv(2)) == 0) {
+        Com_Printf("Usage: sendclientcommand <player name> <command>\nPlayer may be 'all' or 'allbots'\n");
+        return;
+    }
+
+    cl = SV_GetPlayerByHandle();
+    cmd = Cmd_ArgsFromRaw(2);
+
+    if (!cl) {
+        if (!Q_stricmp(Cmd_Argv(1), "all")) {
+            SV_SendServerCommand(NULL, "%s", cmd);
+        }
+        return;
+    }
+
+    SV_SendServerCommand(cl, "%s", cmd);
+}
+
+
+/*
+==================
+SV_Incognito_f
+
+Pretend that you disconnect, but really go to spec.
+==================
+*/
+static void SV_Incognito_f(void) {
+    client_t    *cl;
+    int     i;
+    char        cmd[64];
+
+    // Make sure server is running.
+    if (!com_sv_running->integer) {
+        Com_Printf("Server is not running.\n");
+        return;
+    }
+
+    if (!in_redirect) {
+        Com_Printf("The incognito command can only be run through rcon\n");
+        return;
+    }
+
+    if (Cmd_Argc() != 1) {
+        Com_Printf("^1ERROR^7: No arguments expected for incognito command\n");
+        return;
+    }
+
+    // Find the person connected to server who issued the incognito command.
+    for (i = 0, cl = svs.clients;; i++, cl++) {
+        if (i == sv_maxclients->integer) {
+            cl = NULL;
+            break;
+        }
+        if (cl->state >= CS_ACTIVE && NET_CompareAdr(cl->netchan.remoteAddress, svs.redirectAddress)) {
+            break; // found
+        }
+    }
+
+    if (cl != NULL) {
+        sv.incognitoJoinSpec = qtrue;
+        Com_sprintf(cmd, sizeof(cmd), "forceteam %i spectator\n", i);
+        Cmd_ExecuteString(cmd);
+        sv.incognitoJoinSpec = qfalse;
+        SV_SendServerCommand(NULL, "print \"%s" S_COLOR_WHITE " ^1disconnected\n\"", cl->colourName); // color OK
+        Com_sprintf(cmd, sizeof(cmd), "sendclientcommand all cs %i \"\"\n", 548 + i);
+        Cmd_ExecuteString(cmd);
+    }
+    else {
+        Com_Printf("Must be connected to server for incognito to work\n");
+    }
+
+}
+
+
+/*
+==================
+SV_Teleport_f
+- used mickaels code
+- added messages
+==================
+*/
+static void SV_Teleport_f(void)
+{
+    client_t *cl;
+    playerState_t *ps;
+    
+    // make sure server is running
+    if (!com_sv_running->integer)
+    {
+        Com_Printf("Server is not running.\n");
+        return;
+    }
+    
+    if (Cmd_Argc() != 2 && Cmd_Argc() != 3 && Cmd_Argc() != 5)
+    {
+        Com_Printf
+        ("Usage: teleport <player name> [<x> <y> <z> | <player name (src)>]\n");
+        return;
+    }
+    
+    if (!(cl = SV_GetPlayerByHandle()))
+        return;
+    
+    ps = SV_GameClientNum(cl - svs.clients);
+    
+    if (Cmd_Argc() == 2)        // print a player's position
+    {
+        //Com_Printf("(%f %f %f)\n", ps->origin[0], ps->origin[1], ps->origin[2]);
+        Com_Printf("Position: (%f %f %f)\n", ps->origin[0], ps->origin[1], ps->origin[2]);
+        return;
+    }
+    
+    else if (Cmd_Argc() == 3)   // teleport a player to another player's location
+    {
+        client_t *cl_src;
+        playerState_t *ps_src;
+        
+        Cmd_TokenizeString(Cmd_Args()); // ugly hack for SV_GetPlayerByHandle()
+        
+        if (!(cl_src = SV_GetPlayerByHandle()))
+            return;
+        
+        if (cl_src == cl) {
+            Com_Printf("^1ERROR^7: You cant't teleport a player to himself\n");
+            return;
+        }
+        
+        ps_src = SV_GameClientNum(cl_src - svs.clients);
+        VectorCopy(ps_src->origin, ps->origin);
+        SV_SendServerCommand(cl, "print \"You (%s^7) were teleported to %s^7\n\"",cl->name, cl_src->name);
+        SV_SendServerCommand(cl_src, "print \"%s^7 was teleported to You (%s^7)\n\"",cl->name, cl_src->name);
+    }
+    else                        // teleport a player to the specified x, y, z coordinates
+    {
+        int i;
+        for (i = 0; i < 3; ++i) {
+            ps->origin[i] = atof(Cmd_Argv(i + 2));
+        }
+        SV_SendServerCommand(cl, "print \"You (%s^7) were teleported to x: %f y: %f z: %f^7\n\"",cl->name, ps->origin[0], ps->origin[1], ps->origin[2]);
+    }
+    
+    VectorClear(ps->velocity);
+}
+
+
 //===============================================================
 
 /*
@@ -1199,160 +1361,6 @@ static void SV_ForceCvar_f(void) {
     SV_ForceCvar_f_helper(cl);
 }
 
-////////////////////////////////////////////////////
-// separator for forcecvar.patch and incognito.patch
-////////////////////////////////////////////////////
-
-/*
-==================
-SV_SendClientCommand_f
-
-Send a reliable command to a specific client.
-==================
-*/
-static void SV_SendClientCommand_f(void) {
-    client_t    *cl;
-    char        *cmd;
-
-    // Make sure server is running.
-    if (!com_sv_running->integer) {
-        Com_Printf("Server is not running.\n");
-        return;
-    }
-
-    if (Cmd_Argc() < 3 || strlen(Cmd_Argv(2)) == 0) {
-        Com_Printf("Usage: sendclientcommand <player name> <command>\nPlayer may be 'all' or 'allbots'\n");
-        return;
-    }
-
-    cl = SV_GetPlayerByHandle();
-    cmd = Cmd_ArgsFromRaw(2);
-
-    if (!cl) {
-        if (!Q_stricmp(Cmd_Argv(1), "all")) {
-            SV_SendServerCommand(NULL, "%s", cmd);
-        }
-        return;
-    }
-
-    SV_SendServerCommand(cl, "%s", cmd);
-}
-
-
-/*
-==================
-SV_Incognito_f
-
-Pretend that you disconnect, but really go to spec.
-==================
-*/
-static void SV_Incognito_f(void) {
-    client_t    *cl;
-    int     i;
-    char        cmd[64];
-
-    // Make sure server is running.
-    if (!com_sv_running->integer) {
-        Com_Printf("Server is not running.\n");
-        return;
-    }
-
-    if (!in_redirect) {
-        Com_Printf("The incognito command can only be run through rcon\n");
-        return;
-    }
-
-    if (Cmd_Argc() != 1) {
-        Com_Printf("No arguments expected for incognito command\n");
-        return;
-    }
-
-    // Find the person connected to server who issued the incognito command.
-    for (i = 0, cl = svs.clients;; i++, cl++) {
-        if (i == sv_maxclients->integer) {
-            cl = NULL;
-            break;
-        }
-        if (cl->state >= CS_ACTIVE && NET_CompareAdr(cl->netchan.remoteAddress, svs.redirectAddress)) {
-            break; // found
-        }
-    }
-
-    if (cl != NULL) {
-        sv.incognitoJoinSpec = qtrue;
-        Com_sprintf(cmd, sizeof(cmd), "forceteam %i spectator\n", i);
-        Cmd_ExecuteString(cmd);
-        sv.incognitoJoinSpec = qfalse;
-        SV_SendServerCommand(NULL, "print \"%s" S_COLOR_WHITE " disconnected\n\"", cl->name); // color OK
-        Com_sprintf(cmd, sizeof(cmd), "sendclientcommand all cs %i \"\"\n", 548 + i);
-        Cmd_ExecuteString(cmd);
-    }
-    else {
-        Com_Printf("Must be connected to server for incognito to work\n");
-    }
-
-}
-
-/*
-==================
-SV_Teleport_f
-- used mickaels code
-- added messages
-==================
-*/
-static void SV_Teleport_f(void)
-{
-    client_t *cl;
-    playerState_t *ps;
-    
-    // make sure server is running
-    if (!com_sv_running->integer)
-    {
-        Com_Printf("Server is not running.\n");
-        return;
-    }
-    
-    if (Cmd_Argc() != 2 && Cmd_Argc() != 3 && Cmd_Argc() != 5)
-    {
-        Com_Printf
-        ("Usage: teleport <player name> [<x> <y> <z> | <player name (src)>]\n");
-        return;
-    }
-    
-    if (!(cl = SV_GetPlayerByHandle()))
-        return;
-    
-    ps = SV_GameClientNum(cl - svs.clients);
-    
-    if (Cmd_Argc() == 2)        // print a player's position
-    {
-        //Com_Printf("(%f %f %f)\n", ps->origin[0], ps->origin[1], ps->origin[2]);
-        Com_Printf("Position: (%f %f %f)\n", ps->origin[0], ps->origin[1], ps->origin[2]);
-        return;
-    }
-    
-    else if (Cmd_Argc() == 3)   // teleport a player to another player's location
-    {
-        client_t *cl_src;
-        playerState_t *ps_src;
-        
-        Cmd_TokenizeString(Cmd_Args()); // ugly hack for SV_GetPlayerByHandle()
-        
-        if (!(cl_src = SV_GetPlayerByHandle()))
-            return;
-        
-        if (cl_src == cl) {
-            Com_Printf("You cant't teleport a player to himself\n");
-            return;
-        }
-        
-        ps_src = SV_GameClientNum(cl_src - svs.clients);
-        VectorCopy(ps_src->origin, ps->origin);
-        SV_SendServerCommand(cl, "print \"You (%s^7) were teleported to %s^7\n\"",cl->name, cl_src->name);
-        SV_SendServerCommand(cl_src, "print \"%s^7 was teleported to You (%s^7)\n\"",cl->name, cl_src->name);
-    }
-}
-
 //===========================================================
 
 /*
@@ -1811,30 +1819,6 @@ static void SV_CompleteMapName( char *args, int argNum ) {
 }*/
 
 /*
-==========
-SV_BigText_f
-==========
-*/
-static void SV_BigText_f(void)
-{
-    
-    // make sure server is running
-    if (!com_sv_running->integer)
-    {
-        Com_Printf("Server is not running.\n");
-        return;
-    }
-    
-    if (Cmd_Argc() < 2 || strlen(Cmd_Argv(1)) == 0)
-    {
-        Com_Printf("Usage: bigtext <string>\n");
-        return;
-    }
-    SV_SendServerCommand(NULL, "cp \"%s\"",Cmd_Args());
-    return; // do not run the qvm bigtext
-}
-
-/*
 ==================
 SV_AddOperatorCommands
 ==================
@@ -1849,6 +1833,8 @@ void SV_AddOperatorCommands( void ) {
 
     initialized = qtrue;
 
+    Cmd_AddCommand ("teleport", SV_Teleport_f);
+    Cmd_AddCommand ("tp", SV_Teleport_f);
     Cmd_AddCommand ("heartbeat", SV_Heartbeat_f);
     Cmd_AddCommand ("kick", SV_Kick_f);
     Cmd_AddCommand ("banUser", SV_Ban_f);
@@ -1861,8 +1847,6 @@ void SV_AddOperatorCommands( void ) {
     Cmd_AddCommand ("map_restart", SV_MapRestart_f);
     Cmd_AddCommand ("sectorlist", SV_SectorList_f);
     Cmd_AddCommand ("map", SV_Map_f);
-    Cmd_AddCommand ("bigtext", SV_BigText_f);
-    Cmd_AddCommand ("teleport", SV_Teleport_f);
 #ifndef PRE_RELEASE_DEMO
     Cmd_AddCommand ("devmap", SV_Map_f);
     Cmd_AddCommand ("spmap", SV_Map_f);
@@ -1876,12 +1860,11 @@ void SV_AddOperatorCommands( void ) {
         Cmd_AddCommand("stopserverdemo", SV_StopServerDemo_f);
     }
 
-    Cmd_AddCommand ("forcecvar", SV_ForceCvar_f);
+    Cmd_AddCommand("forcecvar", SV_ForceCvar_f);
     ////////////////////////////////////////////////////
     // separator for forcecvar.patch and incognito.patch
     ////////////////////////////////////////////////////
     Cmd_AddCommand ("sendclientcommand", SV_SendClientCommand_f);
-    Cmd_AddCommand ("scc", SV_SendClientCommand_f);
     Cmd_AddCommand ("incognito", SV_Incognito_f);
 }
 

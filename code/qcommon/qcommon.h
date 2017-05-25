@@ -752,7 +752,6 @@ void 		QDECL Com_Printf( const char *fmt, ... ) __attribute__ ((format (printf, 
 void 		QDECL Com_DPrintf( const char *fmt, ... ) __attribute__ ((format (printf, 1, 2)));
 void 		QDECL Com_Error( int code, const char *fmt, ... ) __attribute__ ((format (printf, 2, 3)));
 void 		Com_Quit_f( void );
-
 int			Com_EventLoop( void );
 int			Com_Milliseconds( void );	// will be journaled properly
 unsigned	Com_BlockChecksum( const void *buffer, int length );

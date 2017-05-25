@@ -323,7 +323,7 @@ void SV_DirectConnect(netadr_t from) {
 
             // I guess we're not checking for the qport 1337 hack on LAN clients.
             if (sv_block1337->integer > 0 && qport == 1337) {
-                NET_OutOfBandPrint(NS_SERVER, from, "print\nYou are too 1337 for this server.\n");
+                NET_OutOfBandPrint(NS_SERVER, from, "print\nThis server is not for wussies.\n");
                 Com_DPrintf("1337 qport, rejected connect from %s\n", NET_AdrToString(from));
                 return;
             }
@@ -1417,59 +1417,6 @@ void SV_UpdateUserinfo_f( client_t *cl ) {
             Q_strncpyz(gl->pers.netname, cl->colourName, MAX_NETNAME);
 }
 
-
-/*
-==================
-SV_Maplist_f
-==================
-*/
-void SV_Maplist_f(client_t *cl) {
-    int numMaps, j;
-    char **maplist;
-
-    maplist = FS_ListFiles("maps", ".bsp", &numMaps);
-    SV_SendServerCommand(cl, "print \"^3Maps:\"");
-    for (j = 0; j < numMaps; j++) {
-        maplist[j][strlen(maplist[j])-4] = 0;
-        SV_SendServerCommand(cl, "print \"^2%s\"", maplist[j]);
-    }
-}
-
-/*
-==================
-SV_Mapcycle_f
-==================
-*/
-void SV_Mapcycle_f(client_t *cl) {
-    int s;
-    fileHandle_t h;
-    char *cycleFile;
-    char *allMaps, *singleMap;
-
-    cycleFile = Cvar_VariableString("g_mapcycle");
-
-    s = FS_FOpenFileRead(cycleFile, &h, qtrue);
-    if (s) {
-        allMaps = Z_Malloc(s + 1);
-        if (FS_Read(allMaps, s, h)) {
-            SV_SendServerCommand(cl, "print \"Mapcycle:\"");
-            singleMap = strtok(allMaps, "\r\n");
-            while (singleMap) {
-                if (!Q_stricmp(sv_mapname->string, singleMap)) {
-                    SV_SendServerCommand(cl, "print \"^2%s <- We are here\"", singleMap);
-                } else {
-                    SV_SendServerCommand(cl, "print \"%s\"", singleMap);
-                }
-                singleMap = strtok(NULL, "\r\n");
-            }
-        }
-    } else {
-        SV_SendServerCommand(cl, "print \"Mapcycle retrieval failed.\"");
-    }
-}
-
-
-
 typedef struct {
 	char	*name;
 	void	(*func)( client_t *cl );
@@ -1484,9 +1431,6 @@ static ucmd_t ucmds[] = {
 	{"nextdl", SV_NextDownload_f},
 	{"stopdl", SV_StopDownload_f},
 	{"donedl", SV_DoneDownload_f},
-
-    {"maplist", SV_Maplist_f},
-    {"mapcycle", SV_Mapcycle_f},
 
 	{NULL, NULL}
 };
@@ -1521,6 +1465,7 @@ void SV_ExecuteClientCommand(client_t *cl, const char *s, qboolean clientOK) {
 			break;
 		}
 	}
+
 	if (clientOK) {
 
         // pass unknown strings to the game
@@ -1550,7 +1495,7 @@ void SV_ExecuteClientCommand(client_t *cl, const char *s, qboolean clientOK) {
                         return;
                     }
                 }
-                
+                sv.lastSpecChat[0] = '\0';
                 argsFromOneMaxlen = MAX_SAY_STRLEN;
                 
             }
@@ -1599,12 +1544,7 @@ void SV_ExecuteClientCommand(client_t *cl, const char *s, qboolean clientOK) {
 				SV_SendServerCommand(cl, "print \"Chat dropped due to message length constraints.\n\"");
 				return;
 			}
-            else if (Q_stricmp("callvote", Cmd_Argv(0)) == 0) {
-                Com_Printf("Callvote from %s (client #%i, %s): %s\n",
-                        cl->name, (int) (cl - svs.clients),
-                        NET_AdrToString(cl->netchan.remoteAddress), Cmd_Args());
-            }
-            if (sv_disableDefaultMaps->integer > 0 && !Q_stricmp("callvote",Cmd_Argv(0)) && (!Q_stricmp("nextmap",Cmd_Argv(1)) || !Q_stricmp("map",Cmd_Argv(1)))
+            if (sv_disableMaps->integer > 0 && !Q_stricmp("callvote",Cmd_Argv(0)) && (!Q_stricmp("nextmap",Cmd_Argv(1)) || !Q_stricmp("map",Cmd_Argv(1)))
                 && (!Q_stricmp("ut4_abbey", Cmd_Argv(2))
                     || !Q_stricmp("ut4_abbeyctf", Cmd_Argv(2))
                     || !Q_stricmp("ut4_algiers", Cmd_Argv(2))
@@ -1692,15 +1632,15 @@ void SV_ExecuteClientCommand(client_t *cl, const char *s, qboolean clientOK) {
             {
                 
                 
-                SV_SendServerCommand(cl, "cp \"^7This map is currently disabled\"");
+                SV_SendServerCommand(cl, "cp \"^7This map is currently ^1disabled\"");
                 return;
             }
-            VM_Call( gvm, GAME_CLIENT_COMMAND, cl - svs.clients );
-        }
-    }
-    else if (!bProcessed) {
-        Com_DPrintf( "client text ignored for %s: %s\n", cl->name, Cmd_Argv(0) );
-    }
+			VM_Call( gvm, GAME_CLIENT_COMMAND, cl - svs.clients );
+		}
+	}
+	else if (!bProcessed) {
+		Com_DPrintf( "client text ignored for %s: %s\n", cl->name, Cmd_Argv(0) );
+	}
 }
 
 /*

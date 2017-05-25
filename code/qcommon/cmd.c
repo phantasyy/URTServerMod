@@ -398,6 +398,53 @@ void	Cmd_ArgvBuffer( int arg, char *buffer, int bufferLength ) {
 	Q_strncpyz( buffer, Cmd_Argv( arg ), bufferLength );
 }
 
+
+/*
+============
+Cmd_Args
+
+Returns a single string containing argv(1) to argv(argc()-1)
+============
+*/
+char	*Cmd_Args( void ) {
+	static	char		cmd_args[MAX_STRING_CHARS];
+	int		i;
+
+	cmd_args[0] = 0;
+	for ( i = 1 ; i < cmd_argc ; i++ ) {
+		strcat( cmd_args, cmd_argv[i] );
+		if ( i != cmd_argc-1 ) {
+			strcat( cmd_args, " " );
+		}
+	}
+
+	return cmd_args;
+}
+
+/*
+============
+Cmd_Args
+
+Returns a single string containing argv(arg) to argv(argc()-1)
+============
+*/
+char *Cmd_ArgsFrom( int arg ) {
+	static	char		cmd_args[BIG_INFO_STRING];
+	int		i;
+
+	cmd_args[0] = 0;
+	if (arg < 0)
+		arg = 0;
+	for ( i = arg ; i < cmd_argc ; i++ ) {
+		strcat( cmd_args, cmd_argv[i] );
+		if ( i != cmd_argc-1 ) {
+			strcat( cmd_args, " " );
+		}
+	}
+
+	return cmd_args;
+}
+
 /*
 ============
 Cmd_ArgsFromRaw
@@ -450,52 +497,6 @@ char *Cmd_ArgsFromRaw(int arg) {
 
 	Q_strncpyz(cmd_args_raw, remaining_text, sizeof(cmd_args_raw));
 	return cmd_args_raw;
-}
-
-/*
-============
-Cmd_Args
-
-Returns a single string containing argv(1) to argv(argc()-1)
-============
-*/
-char	*Cmd_Args( void ) {
-	static	char		cmd_args[MAX_STRING_CHARS];
-	int		i;
-
-	cmd_args[0] = 0;
-	for ( i = 1 ; i < cmd_argc ; i++ ) {
-		strcat( cmd_args, cmd_argv[i] );
-		if ( i != cmd_argc-1 ) {
-			strcat( cmd_args, " " );
-		}
-	}
-
-	return cmd_args;
-}
-
-/*
-============
-Cmd_Args
-
-Returns a single string containing argv(arg) to argv(argc()-1)
-============
-*/
-char *Cmd_ArgsFrom( int arg ) {
-	static	char		cmd_args[BIG_INFO_STRING];
-	int		i;
-
-	cmd_args[0] = 0;
-	if (arg < 0)
-		arg = 0;
-	for ( i = arg ; i < cmd_argc ; i++ ) {
-		strcat( cmd_args, cmd_argv[i] );
-		if ( i != cmd_argc-1 ) {
-			strcat( cmd_args, " " );
-		}
-	}
-
-	return cmd_args;
 }
 
 /*

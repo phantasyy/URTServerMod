@@ -2520,7 +2520,7 @@ void Com_Init( char *commandLine ) {
 	Cmd_AddCommand ("changeVectors", MSG_ReportChangeVectors_f );
 	Cmd_AddCommand ("writeconfig", Com_WriteConfig_f );
 
-	s = va("^2-Psd`| ^7SUPER ^1[MOD]");
+	s = va("^2-Psd`| ^7Super ^1[MOD]");
 	com_version = Cvar_Get ("version", s, CVAR_ROM | CVAR_SERVERINFO );
 
 	Sys_Init();
