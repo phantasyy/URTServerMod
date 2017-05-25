@@ -2,7 +2,7 @@
 **The server mod that has everything you need for a complete UrT server; infinite stamina, no fall damage, colours names, infinite wall jumps, hide chat cmds and funstuff replacement**
 
 ## Cvar/Usage
-It contains all the original cvars and 10 more for control the mods added. All mods are disabled by default. If you want to enable add the cvar's to your server config. You can use the following commands to enable it (to enable just replace '0' with '1'):
+It contains all the original cvars and 10 more for the mods added. All mods are disabled by default. If you want to enable add the cvar's to your server config. You can use the following commands to enable it (to enable just replace '0' with '1'):
 
  > set sv_infiniteStamina 0
 
